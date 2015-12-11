@@ -1,0 +1,131 @@
+song:
+      style : "bluegrass"
+      header:
+          title : "Happy Xmas Cowboy"
+          composer : "shiihs"
+      global:
+          key : "c \\major"
+      midi:
+          tempo: 144
+      harmony:
+        - transpose:
+            to : "c"
+        - chords :
+            >
+                  I I |
+                  I I |
+                  I I |
+                  I I |
+                  IV IV |
+                  I I |
+                  I I |
+                  I I |
+                  V V |
+                  I I |
+                  I I |
+                  V V |
+                  I I |
+                  IV IV |
+                  V V |
+                  V V |
+                  I I |
+                  V V |
+                  I I |
+                  IV IV |
+                  I I |
+                  V V |
+                  I I |
+                  IV IV |
+                  I I |
+                  V V |
+                  I I |
+                  I StepUp |
+        - ly : "\\key d \\major"
+        - transpose:
+            to : "d"
+        - chords :
+            >
+                  I I |
+                  I I |
+                  I I |
+      tracks:
+          tenor:
+              type : "Staff"
+              instrumentName : "singer"
+              staves:
+                  tenor:
+                      staffProperties:
+                          midiInstrument : "clarinet"
+                          midiMinimumVolume : "#0.7"
+                          midiMaximumVolume : "#0.9"
+                      music:
+                          - transpose:
+                              to: "c"
+                          - ly:
+                              >
+                                  \global
+                                  \dynamicUp r1 |
+                                  r2 c''2 |
+                                  e''8 g''8 g''8 a''8 e''8 d''8 c''4~ |
+                                  c''2. c''4 |
+                                  c''4 c''4 c''4 a' |
+                                  g'2 c''2 |
+                                  e''8 g''8 g''8 a''8 e''8 d''8 c''4~ |
+                                  c''2. c''4 |
+                                  g'4. g'8 a'4 b'4 |
+                                  c''1 |
+                                  r2. c''4 |
+
+                                  d''4 d'' d'' d'' |
+                                  e''4 c''2 c''4  |
+                                  f''4 f'' f'' fis'' |
+                                  g''2. d''4 |
+
+                                  g''4 g'' g'' f'' |
+                                  e''4 c''2 c''4 |
+                                  g'4. g'8 a'4 b'4 |
+                                  c''2. \times 2/3 { c''8 c'' c''}  |
+                                  <f''a''>2. \times 2/3 { <f'' a''>8 <f'' a''> <e'' g''>}  |
+                                  <c'' e''>2. <c'' e''>4 |
+                                  <g' g''>4 <g' g''>4 <a' fis''>4 <b' f''>4 |
+                                  <c'' e''>2. \times 2/3 { <c'' e''>8 <c'' e''> <c'' e''> }  |
+                                  <f'' a''>2. \times 2/3 { <f'' a''>8 <f'' a''> <e'' g''>}  |
+                                  <c'' e''>2. <c'' g''>4 |
+                                  <g' b''>4 <g' g''>4 <a' fis''>4 <b' f''>4 |
+                                  <c'' e''>1 |
+                                  r1 |
+                                  \key d \major
+                          - ly:
+                              >
+                                  r2. d''4 fis''8 a'' a'' g'' g''8 fis''4.~  |
+                                  fis''2. d''4 |
+                                  g''8 g''8 d''8 e''8 fis''4. d''8 |
+                      lyrics:
+                          >
+                              For | years I yearned for love love love a |
+                              girl was what I need. I |
+                              dreamed for her to live with me |
+                              I |
+                              nee- ded her with speed. |
+                              I built my- self this |
+                              snow- girl, most |
+                              gor- geous girl on |
+                              earth. ''t_Was |
+                              on a Christ- mas |
+                              mor- ning that |
+                              I ar- ranged her  |
+                              birth. |
+
+                              Yip- pee ya |
+                              yo, yip- pee ya |
+                              yay this |
+                              is the cow- boy |
+                              way Yip- pee ya |
+                              yay, yip- pee ya |
+                              yo, let's |
+                              sing of ho ho ho. |
+
+                              I gave her quite the |
+                              car- rot |
+                              some leeks to lace her |
+                              shirt. to |

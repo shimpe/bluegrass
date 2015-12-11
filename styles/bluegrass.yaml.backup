@@ -1,0 +1,77 @@
+# bluegrass style
+# (C) 2015 stefaan himpe
+style:
+      name : 'bluegrass'
+      global:
+          time : "4/4"
+      specified-relative-to : "c"
+      tracks :
+          upperbanjo :
+              type : "Staff"
+              instrumentName : "banjo I"
+              staves :
+                  banjo:           
+                      staffProperties:
+                          midiInstrument : "banjo"
+                      voiceLeadingMethod : 1
+                      chords :
+                          I : "{c'16 g' e' c' g' e' c' e'}"
+#                          IV : "{c'16 a' f' c' a' f' c' f'}"
+#                          V : "{g16 g' d' b g' d' b d'}"
+                          StepUp : "{c'16 g' e' c' g' e' c' e'}"
+                          Rest: "{r2}"
+          lowerbanjo :
+              type : "Staff"
+              instrumentName : "banjo II"
+              staves :
+                  banjo:
+                      staffProperties:
+                          midiInstrument : "banjo"
+                      voiceLeadingMethod : 1
+                      chords : 
+                          I : "{g'16 e' c'' g' e' c'' g' e'}"
+#                          IV : "{ a'16 f' c'' a' f' c'' a'f'}"
+#                          V : "{ b'16 d' b' g' d' b' g' d' }"
+                          StepUp : "{g'16 e' c'' g' e' c'' g' e'}"
+                          Rest: "{r2}"
+          bass :
+              type : "Staff"
+              instrumentName : "bass"
+              staves :
+                  bass :
+                      staffProperties:
+                          midiInstrument: "acoustic bass"
+                      voiceLeadingMethod : 1
+                      clef : "bass_8"
+                      chords :
+                          I : "{ c,4 g,,}"
+                          IV : "{f,4 c,}"
+                          V : "{ g,,4 d,}"
+                          StepUp : "{ c,4 cis,4 }"
+                          Rest: "{r2}"
+          piano:
+              type : "PianoStaff"
+              instrumentName : "piano"
+              staves :
+                  piano-right :
+                      staffProperties:
+                          midiInstrument : "acoustic grand"
+                      voiceLeadingMethod : 0
+                      chords :
+                          I : "{ r8 <g' c'' e''>4 <g' c'' e''>8 }"
+                          IV : "{ r8 <a' c'' f''>4 <a' c'' f''>8 }"
+                          V : "{ r8 <g' b'' d''>4 <b' b'' d''>8 }"
+                          StepUp : "{ r8 <g' c'' e''>4 <g' c'' e''>8 }"
+                          Rest : "{r1}"
+                  piano-left :
+                      staffProperties:
+                          midiInstrument : "acoustic grand"
+                      voiceLeadingMethod : 0
+                      clef : "bass"
+                      chords :
+                          I : "{\\transpose c c, {c'8 c''4 g'8 }}"
+                          IV : "{\\transpose c c,{ f'8 f''4 c'8}}"
+                          V : "{\\transpose c c, {g'8 g''4 d'8}}"
+                          StepUp : "{\\transpose c c, {c'4 cis'4}}"
+                          Rest : "{r1}"
+                          
