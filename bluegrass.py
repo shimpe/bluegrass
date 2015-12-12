@@ -14,8 +14,8 @@ def setup_argument_parser():
     parser = argparse.ArgumentParser(
         description="Arrange compiler for lilypond.",
         epilog="Thank you for smoking bluegrass.")
-    parser.add_argument("-i", "--inputfile", dest="inputfile", default="samples/cowboy-xmas.yaml", nargs=1)
-    parser.add_argument("-o", "--outputfile", dest="outputfile", default="", nargs=1)
+    parser.add_argument("-i", "--inputfile", dest="inputfile", default=["samples/cowboy-xmas.yaml"], nargs=1)
+    parser.add_argument("-o", "--outputfile", dest="outputfile", default=["output/cowboy.ly"], nargs=1)
     parser.add_argument("-f", "--force", dest="force", action="store_true", default=False)
     return parser
 
