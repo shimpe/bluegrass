@@ -4,7 +4,9 @@ style:
       name : 'bluegrass'
       global:
           time : "4/4"
-      specified-relative-to : "C"
+      specified-relative-to :
+          key : "c"
+          mode : "major"
       tracks :
           upperbanjo :
               type : "Staff"

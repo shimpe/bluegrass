@@ -95,7 +95,7 @@ class StyleCompiler(object):
 
     def compile(self):
         # read song and style specs
-        song = self.load_song(self.options.inputfile)
+        song = self.load_song(self.options.inputfile[0])
         song_style = song["style"]
         song_title = song["header"]["title"]
         song_writer = song["header"]["composer"]
@@ -216,17 +216,7 @@ class StyleCompiler(object):
 
     def calculate_voice_definitions(self, knownchords, song, style):
         h = HarvestedProperties()
-        h.voicedefinitions = []
-        h.haslyrics = {}
-        h.hasclef = {}
-        h.instrumentname = {}
-        h.sorted_style_tracks = []
-        h.sorted_song_tracks = []
-        refpitch = style["specified-relative-to"]
-        destpitch = refpitch[:]
-        from collections import defaultdict
-        h.stafftypes = defaultdict(list)
-        h.staffproperties = defaultdict(list)
+        refpitch = style["specified-relative-to"]["key"]
         for name in style["tracks"]:
             if "instrumentName" in style["tracks"][name]:
                 h.instrumentname[name] = style["tracks"][name]["instrumentName"]
@@ -260,11 +250,14 @@ class StyleCompiler(object):
                                 else:
                                     musicelements.append( "{{ \\transpose {0} {1} {{ {2} }} }}".format(refpitch, destpitch, "\\" + self.voicename(name, staff) + c))
                                 previous_chord = c
-                            elif starts_with_one_of(c.upper(), ["III", "II", "IV", "I", "VII", "VI", "V"]): # calculate from previous chord
+                            elif self.to_be_derived_from_existing(c): # calculate from previous chord
                                 cname = "{0}to{1}".format(previous_chord, c)
                                 vname = self.voicename(name,staff) + cname
                                 print(vname)
-                                musicelements.append(vname)
+                                if refpitch == destpitch:
+                                    musicelements.append(vname)
+                                else:
+                                    musicelements.append("{{ \\transpose {0} {1} {{ {2} }} }}".format(refpitch, destpitch, "\\"+vname))
                                 previous_chord = c
                             else:
                                 musicelements.append(c)
@@ -323,3 +316,6 @@ class StyleCompiler(object):
                     h.haslyrics[voicefragmentname] = False
 
         return h
+
+    def to_be_derived_from_existing(self, c):
+        return starts_with_one_of(c.upper(), ["III", "II", "IV", "I", "VII", "VI", "V"])
