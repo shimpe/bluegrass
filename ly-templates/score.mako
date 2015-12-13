@@ -1,5 +1,7 @@
 \version "2.18.2"
 
+\include "articulate.ly"
+
 \header {
 % for property in headerproperties:
     ${property} = "${headerproperties[property]}"
@@ -52,6 +54,15 @@ ${staff}
  >>
 
   \layout { }
+}
+
+\score {
+\unfoldRepeats \articulate
+ <<
+ % for p in parts:
+    \${p}
+ % endfor
+ >>
   \midi {
     \tempo 4=${tempo}
   }
