@@ -1,5 +1,5 @@
-import random
 import copy
+import random
 from collections import defaultdict
 
 import music21
@@ -338,8 +338,10 @@ class VoiceLeader(object):
         pitch_midi = { p.midi : p for p in  from_fragment }
         target_distance = to_scale.getTonic().midi - from_scale.getTonic().midi
 
-        minPitch = music21.interval.Interval("M-2").transposePitch(pitch_midi[min(pitch_midi.keys())])
-        maxPitch = music21.interval.Interval("M2").transposePitch(
+        # to guarantee a suitable octave, only consider the pitches from the source fragment and target fragment
+        # augmented with some margin (a third)
+        minPitch = music21.interval.Interval("M-3").transposePitch(pitch_midi[min(pitch_midi.keys())])
+        maxPitch = music21.interval.Interval("M3").transposePitch(
                 music21.interval.Interval(target_distance).transposePitch(pitch_midi[max(pitch_midi.keys())]))
 
         target_pitches_without_accidentals = [to_scale.pitchFromDegree(d[0], minPitch=minPitch,
@@ -413,45 +415,42 @@ class VoiceLeader(object):
                 inv_matrix[matrix[(s, t)]].append((s, t))
 
             # now investigate which (src -> target) to select
-            max_distance = max(inv_matrix.keys())
             previous_note = None
             # we need to map every note in the from_fragment to a new note in the resulting fragment
             for p in from_fragment:
                 # map every note only once
                 while p not in src2target:
                     # start with lowest cost first
-                    for i in range(max_distance):
-                        # if a solution with this cost exists...
-                        if i in inv_matrix:
-                            # select all mappings (src->target) with this cost
-                            possible_notes = inv_matrix[i]
-                            list_of_notes = []
-                            for n in possible_notes:
-                                # select from all these mappings only the ones that start with the fromFragment pitch
-                                if n[0] == p:
-                                    note = n[1]
-                                    list_of_notes.append(note)
-                            if list_of_notes:
-                                # if multiple candidate mappings, select the one with smallest
-                                # difference to the previous note
-                                if previous_note:
-                                    distance_to_prev_note = defaultdict(list)
-                                    for note in list_of_notes:
-                                        distance_to_prev_note[self.calculate_cost(previous_note, note)].append(note)
-                                    keys = distance_to_prev_note.keys()
-                                    if len(keys) > 1 and 0 in keys:
-                                        del distance_to_prev_note[0] # avoid repeating the same note if feasible
-                                    best_note_key = min(distance_to_prev_note.keys())
-                                    note = random.choice(distance_to_prev_note[best_note_key])
-                                    if note == previous_note:
-                                        continue # search for another note with higher cost (TODO: guaranteed to exist?)
-                                else:
-                                    note = random.choice(list_of_notes)
-                                    if note == previous_note:
-                                        continue # search for another note with higher cost (TODO: guaranteed to exist?)
-                                src2target[p] = note
-                                previous_note = note
-                                break
+                    for i in sorted(inv_matrix.keys()):
+                        # select all mappings (src->target) with this cost
+                        possible_notes = inv_matrix[i]
+                        list_of_notes = []
+                        for n in possible_notes:
+                            # select from all these mappings only the ones that start with the fromFragment pitch
+                            if n[0] == p:
+                                note = n[1]
+                                list_of_notes.append(note)
+                        if list_of_notes:
+                            # if multiple candidate mappings, select the one with smallest
+                            # difference to the previous note
+                            if previous_note:
+                                distance_to_prev_note = defaultdict(list)
+                                for note in list_of_notes:
+                                    distance_to_prev_note[self.calculate_cost(previous_note, note)].append(note)
+                                keys = distance_to_prev_note.keys()
+                                if len(keys) > 1 and 0 in keys:
+                                    del distance_to_prev_note[0]  # avoid repeating the same note if feasible
+                                best_note_key = min(distance_to_prev_note.keys())
+                                note = random.choice(distance_to_prev_note[best_note_key])
+                                if note == previous_note:
+                                    continue  # search for another note with higher cost (TODO: guaranteed to exist?)
+                            else:
+                                note = random.choice(list_of_notes)
+                                if note == previous_note:
+                                    continue  # search for another note with higher cost (TODO: guaranteed to exist?)
+                            src2target[p] = note
+                            previous_note = note
+                            break
 
         target_pitches_with_accidentals = [src2target[p] for p in from_fragment]
         return target_pitches_with_accidentals
