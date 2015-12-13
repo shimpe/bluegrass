@@ -67,6 +67,43 @@ def int_to_letter(number, chars=string.ascii_uppercase):
         result.append(c)
     return "".join(chars[c] for c in reversed(result))
 
+def starts_with_one_of(strng, list_of_strings):
+    """
+    :param strng:
+    :param list_of_strings:
+    :return: true if strng starts with one of the entries in list_of_strings
+    """
+    for s in list_of_strings:
+        if strng.startswith(s):
+            return True
+    return False
+
+def is_valid_music_numeral(s):
+    return s in ["I", "II", "III", "IV", "V", "VI", "VII", "VIII"]
+
+def split_roman_prefix(s):
+    """
+    splits a roman numeral like VIbm7 into roman number, accidental, modifier
+    :param s:(e.g. VIbm7)
+    :return: (VI,b,m7)
+    """
+    for i in reversed(range(len(s)+1)):
+        if i > 0:
+            prefix = s[:i]
+            if is_valid_music_numeral(prefix):
+                num = roman_to_int(prefix)
+                suffix = s[i:]
+                accidental = ""
+                if starts_with_one_of(suffix, ["bb", "##"]):
+                    accidental = suffix[:2]
+                    suffix = suffix[2:]
+                elif starts_with_one_of(suffix, ["b", "#"]):
+                    accidental = suffix[:1]
+                    suffix = suffix[1:]
+                return prefix, accidental, suffix
+    return None, None, None
+
+
 if __name__ == "__main__":
     print (int_to_roman(7))
     print (int_to_roman(1832))
@@ -75,5 +112,7 @@ if __name__ == "__main__":
     print (roman_to_int("XM"))
     print (int_to_text(12323))
     print (int_to_letter(28))
+    print (split_roman_prefix("IVm"))
+    print (split_roman_prefix("IV"))
 
 

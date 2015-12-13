@@ -5,46 +5,36 @@ from mako.template import Template
 from ruamel.yaml import load, RoundTripLoader
 
 from harvestedproperties import HarvestedProperties
-from numberutils import int_to_roman, roman_to_int
-from voiceleading import VoiceLeader
-
+from numberutils import int_to_roman, roman_to_int, split_roman_prefix, starts_with_one_of
+from voiceleading import VoiceLeader, SHIIHS_VOICELEADING
+from collections import defaultdict
+import music21
+from lily2stream import Lily2Stream
 
 def merge_dicts(x, y):
-    '''Given two dicts, merge them into a new dict as a shallow copy.'''
+    """
+    Given two dicts, merge them into a new dict as a shallow copy.
+    :param x: first dict
+    :param y: second dict
+    :return: firstdict updated from seconddict
+    """
     z = x.copy()
     z.update(y)
     return z
 
 
 def cleanup_string_for_lilypond(s):
+    """
+    turn string into lilypond identifier
+    :param s: string
+    :return: lilypondified string
+    """
     return s.replace("_", "").replace("-", "")
 
-def starts_with_one_of(strng, list_of_strings):
-    for s in list_of_strings:
-        if strng.startswith(s):
-            return True
-    return False
-
-def split_roman_prefix(s):
-    for i in reversed(range(len(s))):
-        prefix = s[:i - 1]
-        try:
-            num = roman_to_int(prefix)
-            print(prefix)
-            suffix = s[i - 1:]
-            accidental = ""
-            if starts_with_one_of(suffix, ["bb", "##"]):
-                accidental = suffix[:2]
-                suffix = suffix[2:]
-            elif starts_with_one_of(suffix, ["b", "#"]):
-                accidental = suffix[:1]
-                suffix = suffix[1:]
-            return num, accidental, suffix
-        except:
-            pass
-    return None, None, None
-
 class StyleCompiler(object):
+    """
+    class to compile a style file and a song file to a lilypond file
+    """
     def __init__(self, rootpath, options):
         self.rootpath = rootpath
         self.options = options
@@ -110,7 +100,7 @@ class StyleCompiler(object):
         globalproperties = merge_dicts(style["global"], song["global"])
 
         chorddefinitions, knownchords = self.calculate_chord_definitions(style)
-        harvestedproperties = self.calculate_voice_definitions(knownchords, song, style)
+        harvestedproperties = self.calculate_voice_definitions(knownchords, chorddefinitions, song, style)
         stavedefinitions, tracktostaff = self.calculate_staff_definitions(harvestedproperties)
 
         sorted_track_names = []
@@ -198,7 +188,7 @@ class StyleCompiler(object):
 
     def calculate_chord_definitions(self, style):
         chorddefinitions = {}
-        knownchords = set([])
+        knownchords = defaultdict(set)
         for name in style["tracks"]:
             if name in chorddefinitions:
                 print("*** WARNING: track with name {0} is specified multiple times".format(name))
@@ -206,15 +196,18 @@ class StyleCompiler(object):
 
             for staff in style["tracks"][name]["staves"]:
                 for chord in style["tracks"][name]["staves"][staff]["chords"]:
-                    knownchords.add(chord)
-                    fragname = self.fragmentname(name, staff, chord)
                     fragcontent = style["tracks"][name]["staves"][staff]["chords"][chord]
-                    fragment = "{0} = {1}".format(fragname, fragcontent)
-                    chorddefinitions[name].append(fragment)
+                    self.register_chord(name, staff, chord, fragcontent, knownchords, chorddefinitions)
 
         return chorddefinitions, knownchords
 
-    def calculate_voice_definitions(self, knownchords, song, style):
+    def register_chord(self, name, staff, chord, fragcontent, knownchords, chorddefinitions):
+        knownchords[name].add(chord)
+        fragname = self.fragmentname(name, staff, chord)
+        fragment = "{0} = {1}".format(fragname, fragcontent)
+        chorddefinitions[name].append(fragment)
+
+    def calculate_voice_definitions(self, knownchords, chorddefinitions, song, style):
         h = HarvestedProperties()
         refpitch = style["specified-relative-to"]["key"]
         for name in style["tracks"]:
@@ -244,21 +237,111 @@ class StyleCompiler(object):
                         import re
                         chords = re.split(" |\|\n|\t", chords)
                         for c in chords:
-                            if c in knownchords:
+                            if c in knownchords[name]:
                                 if refpitch == destpitch:
                                     musicelements.append("\\" + self.voicename(name, staff) + c)
                                 else:
-                                    musicelements.append( "{{ \\transpose {0} {1} {{ {2} }} }}".format(refpitch, destpitch, "\\" + self.voicename(name, staff) + c))
+                                    musicelements.append( "{{ \\transpose {0} {1} {{ {2} }} }}".format(refpitch,
+                                                                                                       destpitch,
+                                                                        "\\" + self.voicename(name, staff) + c))
                                 previous_chord = c
                             elif self.to_be_derived_from_existing(c): # calculate from previous chord
-                                cname = "{0}to{1}".format(previous_chord, c)
+                                cname = "{0}".format(c)
                                 vname = self.voicename(name,staff) + cname
-                                print(vname)
-                                if refpitch == destpitch:
-                                    musicelements.append(vname)
-                                else:
-                                    musicelements.append("{{ \\transpose {0} {1} {{ {2} }} }}".format(refpitch, destpitch, "\\"+vname))
+                                number, accidental, modifier = split_roman_prefix(c)
+                                one_chord = "I" + modifier
+
+                                if "I" not in knownchords[name]:
+                                    print("ERROR! Style always needs at least specification of the I chord.")
+                                    print("In case of track {0}, staff {1} we couldn't find it.".format(name,staff))
+                                    print("Bailing out.")
+                                    sys.exit(1)
+
+                                if one_chord not in knownchords[name] and modifier != "m" and modifier != "":
+                                    # minor can be calculated from major if needed; other types require explicit hints
+                                    print("ERROR! Cannot find chord {0} in style file.".format(one_chord))
+                                    print("Need it to calculate chord {0} in track {1}, staff {2}.".format(c,
+                                                                                                        name,
+                                                                                                        staff))
+                                    print("Bailing out.")
+                                    sys.exit(2)
+
+                                elif one_chord not in knownchords[name] and modifier == "m":
+                                    #
+                                    # e.g. you try to calculat VIm but Im doesn't exist in the style file
+                                    # in that case: calculate VIm from I.
+                                    #
+                                    style_scale = style["specified-relative-to"]["key"]
+                                    style_scale_mode = style["specified-relative-to"]["mode"]
+                                    name_to_constructor = {
+                                        "major" : music21.scale.MajorScale,
+                                        "minor" : music21.scale.MinorScale
+                                    }
+                                    source_scale = name_to_constructor[style_scale_mode](style_scale)
+                                    sourcepitch = music21.pitch.Pitch(style_scale)
+                                    target_distance = self.scaledegree_distance_from_I(number+accidental)
+                                    target_interval = music21.interval.Interval(target_distance)
+                                    target_pitch = music21.interval.transposePitch(sourcepitch, target_interval)
+                                    target_scale = music21.scale.MinorScale(target_pitch.name)
+                                    fragment = style["tracks"][name]["staves"][staff]["chords"]["I"]
+                                    vl = VoiceLeader()
+                                    l = Lily2Stream()
+                                    s = l.parse(fragment)
+                                    note_stream = s.flat.getElementsByClass(["Note"])
+                                    pitches = [ n.pitch for n in note_stream ]
+                                    result = vl.calculate(pitches, source_scale, target_scale,
+                                                 reorder_notes=SHIIHS_VOICELEADING, map_accidentals=True)
+                                    for p, n in enumerate(note_stream):
+                                        n.pitch = result[p]
+                                    new_fragment = "{ " + l.unparse(s.flat.getElementsByClass(["Note","Rest"])) + " }"
+                                    if refpitch == destpitch:
+                                        musicelements.append("\\"+vname)
+                                    else:
+                                        musicelements.append("{{ \\transpose {0} {1} {{ {2} }} }}".format(refpitch,
+                                                                                                         destpitch,
+                                                                                                       "\\"+vname))
+                                    self.register_chord(name, staff, c, new_fragment, knownchords, chorddefinitions)
+
+                                elif one_chord in knownchords[name]:
+                                    #
+                                    # e.g. you try to find VIm7 and Im7 exists in the style file
+                                    #
+                                    style_scale = style["specified-relative-to"]["key"]
+                                    style_scale_mode = style["specified-relative-to"]["mode"]
+                                    name_to_constructor = {
+                                        "major" : music21.scale.MajorScale,
+                                        "minor" : music21.scale.MinorScale
+                                    }
+                                    source_scale = name_to_constructor[style_scale_mode](style_scale)
+                                    sourcepitch = music21.pitch.Pitch(style_scale)
+                                    target_distance = self.scaledegree_distance_from_I(number+accidental)
+                                    target_interval = music21.interval.Interval(target_distance)
+                                    target_pitch = music21.interval.transposePitch(sourcepitch, target_interval)
+                                    target_scale = music21.scale.MajorScale(target_pitch.name)
+                                    if "m" in modifier:
+                                        target_scale = music21.scale.MinorScale(target_pitch.name)
+                                    # start from Im7 to calculate VIm7
+                                    fragment = style["tracks"][name]["staves"][staff]["chords"][one_chord]
+                                    vl = VoiceLeader()
+                                    l = Lily2Stream()
+                                    s = l.parse(fragment)
+                                    note_stream = s.flat.getElementsByClass(["Note"])
+                                    pitches = [ n.pitch for n in note_stream ]
+                                    result = vl.calculate(pitches, source_scale, target_scale,
+                                                 reorder_notes=SHIIHS_VOICELEADING, map_accidentals=True)
+                                    for p, n in enumerate(note_stream):
+                                        n.pitch = result[p]
+                                    new_fragment = "{ " + l.unparse(s.flat.getElementsByClass(["Note","Rest"])) + " }"
+                                    if refpitch == destpitch:
+                                        musicelements.append("\\"+vname)
+                                    else:
+                                        musicelements.append("{{ \\transpose {0} {1} {{ {2} }} }}".format(refpitch,
+                                                                                                         destpitch,
+                                                                                                       "\\"+vname))
+                                    self.register_chord(name, staff, c, new_fragment, knownchords, chorddefinitions)
+
                                 previous_chord = c
+
                             else:
                                 musicelements.append(c)
 
@@ -319,3 +402,53 @@ class StyleCompiler(object):
 
     def to_be_derived_from_existing(self, c):
         return starts_with_one_of(c.upper(), ["III", "II", "IV", "I", "VII", "VI", "V"])
+
+    def scaledegree_distance_from_I(self, degree):
+        """
+        :param degree: e.g. "VIb"
+        :return: chromatic distance from "I" to degree
+        """
+        d = {
+            ("I", "I") :    0,
+            ("I", "Ib") :  -1,
+            ("I", "Ibb") : -2,
+            ("I", "I#") :   1,
+            ("I", "I##") :  2,
+
+            ("I", "II") :    2,
+            ("I", "IIb") :   1,
+            ("I", "IIbb") :  0,
+            ("I", "II#") :   3,
+            ("I", "II##") :  4,
+
+            ("I", "III") :    4,
+            ("I", "IIIb") :   3,
+            ("I", "IIIbb") :  2,
+            ("I", "III#") :   5,
+            ("I", "III##") :  6,
+
+            ("I", "IV") :    5,
+            ("I", "IVb") :   4,
+            ("I", "IVbb") :  3,
+            ("I", "IV#") :   6,
+            ("I", "IV##") :  7,
+
+            ("I", "V") :    7,
+            ("I", "Vb") :   6,
+            ("I", "Vbb") :  5,
+            ("I", "V#") :   8,
+            ("I", "V##") :  9,
+
+            ("I", "VI") :    9,
+            ("I", "VIb") :   8,
+            ("I", "VIbb") :  7,
+            ("I", "VI#") :   10,
+            ("I", "VI##") :  11,
+
+            ("I", "VII") :    11,
+            ("I", "VIIb") :   10,
+            ("I", "VIIbb") :  9,
+            ("I", "VII#") :   12,
+            ("I", "VII##") :  13,
+            }
+        return d[("I",degree)] if ("I",degree) in d else 0
