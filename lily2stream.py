@@ -1,13 +1,6 @@
 import ly.musicxml
 import music21
 
-def to_lily(stream):
-    lpc = music21.lily.translate.LilypondConverter()
-    lp_music_list = music21.lily.lilyObjects.LyMusicList()
-    lpc.context = lp_music_list
-    lpc.appendObjectsToContextFromStream(stream)
-    return "\n".join(str(lpc.context).splitlines())
-
 class Lily2Stream(object):
     def __init__(self):
         pass
@@ -21,8 +14,12 @@ class Lily2Stream(object):
         return s
 
     def unparse(self, stream):
-        return to_lily(stream)
+        lpc = music21.lily.translate.LilypondConverter()
+        lp_music_list = music21.lily.lilyObjects.LyMusicList()
+        lpc.context = lp_music_list
+        lpc.appendObjectsToContextFromStream(stream)
+        return str(lpc.context)
 
 if __name__ == "__main__":
     l = Lily2Stream();
-    l.parse("{a}").show("txt")
+    l.parse("{ <a b> }").show("txt")

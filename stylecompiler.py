@@ -170,7 +170,6 @@ class StyleCompiler(object):
                     stavedefinitions.append(staffdefinition)
                     tracktostaff[staffname] = staffname+"Staff"
             elif stafftype == "PianoStaff":
-                no_of_voices = len(harvestedproperties.stafftypes[staffname])
                 lyricsname = {}
                 sorted_voices = []
                 for i, voice in enumerate(harvestedproperties.stafftypes[staffname]):
@@ -196,7 +195,7 @@ class StyleCompiler(object):
 
     def calculate_chord_definitions(self, style):
         chorddefinitions = {}
-        knownchords = defaultdict(set)
+        knownchords = defaultdict(lambda: defaultdict(set))
         for name in style["tracks"]:
             if name in chorddefinitions:
                 print("*** WARNING: track with name {0} is specified multiple times".format(name))
@@ -210,7 +209,7 @@ class StyleCompiler(object):
         return chorddefinitions, knownchords
 
     def register_chord(self, name, staff, chord, fragcontent, knownchords, chorddefinitions):
-        knownchords[name].add(chord)
+        knownchords[name][staff].add(chord)
         fragname = self.fragmentname(name, staff, chord)
         fragment = "{0} = {1}".format(fragname, fragcontent)
         chorddefinitions[name].append(fragment)
@@ -245,7 +244,7 @@ class StyleCompiler(object):
                         import re
                         chords = re.split(" |\|\n|\t", chords)
                         for c in chords:
-                            if c in knownchords[name]:
+                            if c in knownchords[name][staff]:
                                 if refpitch == destpitch:
                                     musicelements.append("\\" + self.voicename(name, staff) + \
                                                          cleanup_string_for_lilypond(c))
@@ -264,13 +263,13 @@ class StyleCompiler(object):
                                 number, accidental, modifier = split_roman_prefix(c)
                                 one_chord = "I" + modifier
 
-                                if "I" not in knownchords[name]:
+                                if "I" not in knownchords[name][staff]:
                                     print("ERROR! Style always needs at least specification of the I chord.")
                                     print("In case of track {0}, staff {1} we couldn't find it.".format(name,staff))
                                     print("Bailing out.")
                                     sys.exit(1)
 
-                                if one_chord not in knownchords[name] and (
+                                if one_chord not in knownchords[name][staff] and (
                                 not modifier.startswith("m")) and modifier != "":
                                     # minor can be calculated from major if needed; other types require explicit hints
                                     print("ERROR! Cannot find chord {0} in style file.".format(one_chord))
@@ -280,7 +279,7 @@ class StyleCompiler(object):
                                     print("Bailing out.")
                                     sys.exit(2)
 
-                                elif one_chord not in knownchords[name] and modifier.startswith("m"):
+                                elif one_chord not in knownchords[name][staff] and modifier.startswith("m"):
                                     #
                                     # e.g. you try to calculat VIm but Im doesn't exist in the style file
                                     # in that case: calculate VIm from I.
@@ -302,13 +301,13 @@ class StyleCompiler(object):
                                     l = Lily2Stream()
                                     s = l.parse(fragment)
                                     note_stream = s.flat.getElementsByClass(["Note"])
-                                    pitches = [ n.pitch for n in note_stream ]
                                     vlmethod = self.voiceleading_method(style, name, staff)
-                                    result = vl.calculate(pitches, source_scale, target_scale,
-                                                          reorder_notes=vlmethod, map_accidentals=True)
-                                    for p, n in enumerate(note_stream):
-                                        n.pitch = result[p]
-                                    new_fragment = "{ " + l.unparse(s.flat.getElementsByClass(["Note","Rest"])) + " }"
+
+                                    self.transform_note_stream(s, source_scale, target_scale, vl, vlmethod)
+                                    self.transform_chord_stream(s, source_scale, target_scale, vl, vlmethod)
+
+                                    new_fragment = "{ " + l.unparse(
+                                        s.flat.getElementsByClass(["Note", "Chord", "Rest"])) + " }"
                                     if refpitch == destpitch:
                                         musicelements.append("\\"+vname)
                                     else:
@@ -317,7 +316,7 @@ class StyleCompiler(object):
                                                                                                        "\\"+vname))
                                     self.register_chord(name, staff, c, new_fragment, knownchords, chorddefinitions)
 
-                                elif one_chord in knownchords[name]:
+                                elif one_chord in knownchords[name][staff]:
                                     #
                                     # e.g. you try to find VIm7 and Im7 exists in the style file
                                     #
@@ -340,14 +339,13 @@ class StyleCompiler(object):
                                     vl = VoiceLeader()
                                     l = Lily2Stream()
                                     s = l.parse(fragment)
-                                    note_stream = s.flat.getElementsByClass(["Note"])
-                                    pitches = [ n.pitch for n in note_stream ]
                                     vlmethod = self.voiceleading_method(style, name, staff)
-                                    result = vl.calculate(pitches, source_scale, target_scale,
-                                                          reorder_notes=vlmethod, map_accidentals=True)
-                                    for p, n in enumerate(note_stream):
-                                        n.pitch = result[p]
-                                    new_fragment = "{ " + l.unparse(s.flat.getElementsByClass(["Note","Rest"])) + " }"
+
+                                    self.transform_note_stream(s, source_scale, target_scale, vl, vlmethod)
+                                    self.transform_chord_stream(s, source_scale, target_scale, vl, vlmethod)
+
+                                    new_fragment = "{ " + l.unparse(
+                                        s.flat.getElementsByClass(["Note", "Chord", "Rest"])) + " }"
                                     if refpitch == destpitch:
                                         musicelements.append("\\"+vname)
                                     else:
@@ -374,6 +372,7 @@ class StyleCompiler(object):
                 voice = staff_voice_template.render(voicefragmentname=voicefragmentname,
                                                     musicelements=musicelements)
                 h.voicedefinitions.append(voice)
+
         if "tracks" in song:
             for name in song["tracks"]:
                 for staff in song["tracks"][name]["staves"]:
@@ -417,6 +416,32 @@ class StyleCompiler(object):
                     else:
                         h.haslyrics[voicefragmentname] = False
         return h
+
+    def transform_chord_stream(self, s, source_scale, target_scale, vl, vlmethod):
+        chord_stream = s.flat.getElementsByClass(["Chord"])
+        if chord_stream:
+            list_of_chordpitches = []
+            for cd in chord_stream:
+                pitches = [n.pitch for n in cd]
+                if pitches:
+                    result = vl.calculate(pitches, source_scale, target_scale,
+                                          reorder_notes=vlmethod, map_accidentals=True)
+                    this_chord = []
+                    for p, n in enumerate(cd.pitches):
+                        this_chord.append(result[p])
+                    list_of_chordpitches.append(this_chord)
+            for p, cs in enumerate(chord_stream):
+                cs.pitches = list_of_chordpitches[p]
+
+    def transform_note_stream(self, s, source_scale, target_scale, vl, vlmethod):
+        note_stream = s.flat.getElementsByClass(["Note"])
+        if note_stream:
+            pitches = [n.pitch for n in note_stream]
+            if pitches:
+                result = vl.calculate(pitches, source_scale, target_scale,
+                                      reorder_notes=vlmethod, map_accidentals=True)
+                for p, n in enumerate(note_stream):
+                    n.pitch = result[p]
 
     def voiceleading_method(self, style, name, staff):
         vlmethod = SHIIHS_VOICELEADING
