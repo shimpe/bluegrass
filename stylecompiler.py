@@ -1,15 +1,16 @@
 import os
 import sys
+from collections import defaultdict
 
+import music21
 from mako.template import Template
 from ruamel.yaml import load, RoundTripLoader
 
 from harvestedproperties import HarvestedProperties
-from numberutils import int_to_roman, roman_to_int, split_roman_prefix, starts_with_one_of
-from voiceleading import VoiceLeader, SHIIHS_VOICELEADING
-from collections import defaultdict
-import music21
 from lily2stream import Lily2Stream
+from numberutils import int_to_roman, int_to_text, split_roman_prefix, starts_with_one_of
+from voiceleading import VoiceLeader, SHIIHS_VOICELEADING
+
 
 def merge_dicts(x, y):
     """
@@ -29,7 +30,14 @@ def cleanup_string_for_lilypond(s):
     :param s: string
     :return: lilypondified string
     """
-    return s.replace("_", "").replace("-", "")
+    c = s.replace("_", "").replace("-", "").replace("##", "dblsharp").replace("#", "sharp")
+    import re
+    nums = re.compile("\d+")
+    numbers = [int(n) for n in re.findall(nums, c)]
+    for n in reversed(sorted(numbers)):
+        c = c.replace("{0}".format(n), int_to_text(int(n)))
+
+    return c
 
 class StyleCompiler(object):
     """
@@ -239,14 +247,19 @@ class StyleCompiler(object):
                         for c in chords:
                             if c in knownchords[name]:
                                 if refpitch == destpitch:
-                                    musicelements.append("\\" + self.voicename(name, staff) + c)
+                                    musicelements.append("\\" + self.voicename(name, staff) + \
+                                                         cleanup_string_for_lilypond(c))
                                 else:
                                     musicelements.append( "{{ \\transpose {0} {1} {{ {2} }} }}".format(refpitch,
                                                                                                        destpitch,
-                                                                        "\\" + self.voicename(name, staff) + c))
+                                                                                                       "\\" + self.voicename(
+                                                                                                           name,
+                                                                                                           staff) + \
+                                                                                                       cleanup_string_for_lilypond(
+                                                                                                           c)))
                                 previous_chord = c
                             elif self.to_be_derived_from_existing(c): # calculate from previous chord
-                                cname = "{0}".format(c)
+                                cname = cleanup_string_for_lilypond("{0}".format(c))
                                 vname = self.voicename(name,staff) + cname
                                 number, accidental, modifier = split_roman_prefix(c)
                                 one_chord = "I" + modifier
@@ -257,7 +270,8 @@ class StyleCompiler(object):
                                     print("Bailing out.")
                                     sys.exit(1)
 
-                                if one_chord not in knownchords[name] and modifier != "m" and modifier != "":
+                                if one_chord not in knownchords[name] and (
+                                not modifier.startswith("m")) and modifier != "":
                                     # minor can be calculated from major if needed; other types require explicit hints
                                     print("ERROR! Cannot find chord {0} in style file.".format(one_chord))
                                     print("Need it to calculate chord {0} in track {1}, staff {2}.".format(c,
@@ -266,7 +280,7 @@ class StyleCompiler(object):
                                     print("Bailing out.")
                                     sys.exit(2)
 
-                                elif one_chord not in knownchords[name] and modifier == "m":
+                                elif one_chord not in knownchords[name] and modifier.startswith("m"):
                                     #
                                     # e.g. you try to calculat VIm but Im doesn't exist in the style file
                                     # in that case: calculate VIm from I.
@@ -358,46 +372,48 @@ class StyleCompiler(object):
                 voice = staff_voice_template.render(voicefragmentname=voicefragmentname,
                                                     musicelements=musicelements)
                 h.voicedefinitions.append(voice)
+        if "tracks" in song:
+            for name in song["tracks"]:
+                for staff in song["tracks"][name]["staves"]:
+                    destpitch = refpitch[:]
+                    if "instrumentName" in song["tracks"][name]:
+                        h.instrumentname[name] = song["tracks"][name]["instrumentName"]
+                    else:
+                        h.instrumentname[name] = name
+                    h.sorted_song_tracks.append(name)
+                    voicefragmentname = self.voicefragmentname(name, staff)
+                    h.stafftypes[name].append((song["tracks"][name]["type"], voicefragmentname))
+                    h.staffproperties[voicefragmentname].append(
+                            song["tracks"][name]["staves"][staff]["staffProperties"])
+                    h.hasclef[voicefragmentname] = "treble"
+                    if "clef" in song["tracks"][name]["staves"][staff]:
+                        h.hasclef[voicefragmentname] = style["tracks"][name]["staves"][staff]["clef"]
+                    staff_voice_template = Template(filename=os.path.join(self.rootpath, "ly-templates", "voice.mako"))
+                    musicelements = []
+                    for element in song["tracks"][name]["staves"][staff]["music"]:
+                        if "ly" in element:
+                            lycode = element["ly"].replace("|", "|\n")
+                            if refpitch == destpitch:
+                                musicelements.append(lycode)
+                            else:
+                                musicelements.append(
+                                    "{{\\transpose {0} {1} {{ {2} }} }}".format(refpitch, destpitch, lycode))
+                        elif "transpose" in element:
+                            destpitch = element["transpose"]["to"]
+                    voice = staff_voice_template.render(voicefragmentname=voicefragmentname,
+                                                        musicelements=musicelements)
+                    h.voicedefinitions.append(voice)
 
-        for name in song["tracks"]:
-            for staff in song["tracks"][name]["staves"]:
-                destpitch = refpitch[:]
-                if "instrumentName" in song["tracks"][name]:
-                    h.instrumentname[name] = song["tracks"][name]["instrumentName"]
-                else:
-                    h.instrumentname[name] = name
-                h.sorted_song_tracks.append(name)
-                voicefragmentname = self.voicefragmentname(name, staff)
-                h.stafftypes[name].append( (song["tracks"][name]["type"], voicefragmentname)  )
-                h.staffproperties[voicefragmentname].append( song["tracks"][name]["staves"][staff]["staffProperties"])
-                h.hasclef[voicefragmentname] = "treble"
-                if "clef" in song["tracks"][name]["staves"][staff]:
-                    h.hasclef[voicefragmentname] = style["tracks"][name]["staves"][staff]["clef"]
-                staff_voice_template = Template(filename=os.path.join(self.rootpath, "ly-templates", "voice.mako"))
-                musicelements = []
-                for element in song["tracks"][name]["staves"][staff]["music"]:
-                    if "ly" in element:
-                        lycode = element["ly"].replace("|", "|\n")
-                        if refpitch == destpitch:
-                            musicelements.append(lycode)
-                        else:
-                            musicelements.append("{{\\transpose {0} {1} {{ {2} }} }}".format(refpitch, destpitch, lycode))
-                    elif "transpose" in element:
-                        destpitch = element["transpose"]["to"]
-                voice = staff_voice_template.render(voicefragmentname=voicefragmentname,
-                                                    musicelements=musicelements)
-                h.voicedefinitions.append(voice)
-
-                if "lyrics" in song["tracks"][name]["staves"][staff]:
-                    h.haslyrics[voicefragmentname] = True
-                    lyrics = song["tracks"][name]["staves"][staff]["lyrics"]
-                    staff_lyrics_template = Template(filename=os.path.join(self.rootpath, "ly-templates", "lyrics.mako"))
-                    rendered_lyrics = staff_lyrics_template.render(voicefragmentname=voicefragmentname + "Lyrics",
-                                                                   musicelements=[ lyrics.replace("|", "|\n") ])
-                    h.voicedefinitions.append(rendered_lyrics)
-                else:
-                    h.haslyrics[voicefragmentname] = False
-
+                    if "lyrics" in song["tracks"][name]["staves"][staff]:
+                        h.haslyrics[voicefragmentname] = True
+                        lyrics = song["tracks"][name]["staves"][staff]["lyrics"]
+                        staff_lyrics_template = Template(
+                            filename=os.path.join(self.rootpath, "ly-templates", "lyrics.mako"))
+                        rendered_lyrics = staff_lyrics_template.render(voicefragmentname=voicefragmentname + "Lyrics",
+                                                                       musicelements=[lyrics.replace("|", "|\n")])
+                        h.voicedefinitions.append(rendered_lyrics)
+                    else:
+                        h.haslyrics[voicefragmentname] = False
         return h
 
     def to_be_derived_from_existing(self, c):
