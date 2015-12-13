@@ -345,7 +345,7 @@ class VoiceLeader(object):
                 music21.interval.Interval(target_distance).transposePitch(pitch_midi[max(pitch_midi.keys())]))
 
         target_pitches_without_accidentals = [to_scale.pitchFromDegree(d[0], minPitch=minPitch,
-                                                       maxPitch=maxPitch) for d in degrees_accidentals]
+                                                                       maxPitch=maxPitch) for d in degrees_accidentals]
         target_pitches = []
         if map_accidentals:
             for p, d in zip(target_pitches_without_accidentals, degrees_accidentals):
@@ -365,7 +365,7 @@ class VoiceLeader(object):
                              music21.interval.notesToChromatic(targetpitch, srcpitch).semitones % 12)
                     namediff = min(music21.interval.notesToChromatic(music21.pitch.Pitch(srcpitch.step),
                                                                      music21.pitch.Pitch(
-                                                                         targetpitch.step)).semitones % 12,
+                                                                             targetpitch.step)).semitones % 12,
                                    music21.interval.notesToChromatic(music21.pitch.Pitch(targetpitch.step),
                                                                      music21.pitch.Pitch(srcpitch.step)).semitones % 12)
                     if (st < src2target_helper[srcpitch][2]) or \
@@ -415,7 +415,8 @@ class VoiceLeader(object):
                 inv_matrix[matrix[(s, t)]].append((s, t))
 
             # now investigate which (src -> target) to select
-            previous_note = None
+            previous_source_note = None
+            previously_calculated_note = None
             # we need to map every note in the from_fragment to a new note in the resulting fragment
             for p in from_fragment:
                 # map every note only once
@@ -431,26 +432,33 @@ class VoiceLeader(object):
                                 note = n[1]
                                 list_of_notes.append(note)
                         if list_of_notes:
-                            # if multiple candidate mappings, select the one with smallest
-                            # difference to the previous note
-                            if previous_note:
+                            # if multiple candidate mappings,select the one with most equal interval to src fragment
+                            if previously_calculated_note:
+                                original_distance = 0
                                 distance_to_prev_note = defaultdict(list)
+                                if previous_source_note:
+                                    # we can take into account original interval to select note
+                                    original_distance = self.calculate_cost(previous_source_note, p)
                                 for note in list_of_notes:
-                                    distance_to_prev_note[self.calculate_cost(previous_note, note)].append(note)
-                                keys = distance_to_prev_note.keys()
+                                    distance_to_prev_note[self.calculate_cost(previously_calculated_note,
+                                                                              note) - original_distance].append(note)
+                                keys = list(distance_to_prev_note.keys())
                                 if len(keys) > 1 and 0 in keys:
-                                    del distance_to_prev_note[0]  # avoid repeating the same note if feasible
-                                best_note_key = min(distance_to_prev_note.keys())
+                                    del distance_to_prev_note[0]  # avoid repeating same note if feasible
+                                best_note_key = max(distance_to_prev_note.keys())  # meh... there's no good default
+                                # choice between max/min
                                 note = random.choice(distance_to_prev_note[best_note_key])
-                                if note == previous_note:
-                                    continue  # search for another note with higher cost (TODO: guaranteed to exist?)
+                                if note == previously_calculated_note:
+                                    continue  # search for another note with higher cost
                             else:
                                 note = random.choice(list_of_notes)
-                                if note == previous_note:
-                                    continue  # search for another note with higher cost (TODO: guaranteed to exist?)
+                                if note == previously_calculated_note:
+                                    continue  # search for another note with higher cost
                             src2target[p] = note
-                            previous_note = note
+                            previously_calculated_note = note
                             break
+
+                previous_source_note = p
 
         target_pitches_with_accidentals = [src2target[p] for p in from_fragment]
         return target_pitches_with_accidentals
@@ -465,6 +473,6 @@ class VoiceLeader(object):
         src2target_diff = abs(srcpitch.midi - targetpitch.midi)
 
         return src2target_diff
-         #   src2target_diff \
-         # + min(src2target_namediff, target2src_namediff) \
-         # + min(src2target_semitones,target2src_semitones)
+        #   src2target_diff \
+        # + min(src2target_namediff, target2src_namediff) \
+        # + min(src2target_semitones,target2src_semitones)
