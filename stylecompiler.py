@@ -303,8 +303,9 @@ class StyleCompiler(object):
                                     s = l.parse(fragment)
                                     note_stream = s.flat.getElementsByClass(["Note"])
                                     pitches = [ n.pitch for n in note_stream ]
+                                    vlmethod = self.voiceleading_method(style, name, staff)
                                     result = vl.calculate(pitches, source_scale, target_scale,
-                                                 reorder_notes=SHIIHS_VOICELEADING, map_accidentals=True)
+                                                          reorder_notes=vlmethod, map_accidentals=True)
                                     for p, n in enumerate(note_stream):
                                         n.pitch = result[p]
                                     new_fragment = "{ " + l.unparse(s.flat.getElementsByClass(["Note","Rest"])) + " }"
@@ -341,8 +342,9 @@ class StyleCompiler(object):
                                     s = l.parse(fragment)
                                     note_stream = s.flat.getElementsByClass(["Note"])
                                     pitches = [ n.pitch for n in note_stream ]
+                                    vlmethod = self.voiceleading_method(style, name, staff)
                                     result = vl.calculate(pitches, source_scale, target_scale,
-                                                 reorder_notes=SHIIHS_VOICELEADING, map_accidentals=True)
+                                                          reorder_notes=vlmethod, map_accidentals=True)
                                     for p, n in enumerate(note_stream):
                                         n.pitch = result[p]
                                     new_fragment = "{ " + l.unparse(s.flat.getElementsByClass(["Note","Rest"])) + " }"
@@ -415,6 +417,12 @@ class StyleCompiler(object):
                     else:
                         h.haslyrics[voicefragmentname] = False
         return h
+
+    def voiceleading_method(self, style, name, staff):
+        vlmethod = SHIIHS_VOICELEADING
+        if "voiceLeadingMethod" in style["tracks"][name]["staves"][staff]:
+            vlmethod = style["tracks"][name]["staves"][staff]["voiceLeadingMethod"]
+        return vlmethod
 
     def to_be_derived_from_existing(self, c):
         return starts_with_one_of(c.upper(), ["III", "II", "IV", "I", "VII", "VI", "V"])
