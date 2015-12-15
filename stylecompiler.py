@@ -232,10 +232,8 @@ class StyleCompiler(object):
                 if "clef" in style["tracks"][name]["staves"][staff]:
                     h.hasclef[voicefragmentname] = style["tracks"][name]["staves"][staff]["clef"]
                 staff_voice_template = Template(filename=os.path.join(self.rootpath, "ly-templates", "voice.mako"))
-                voicename = self.voicename(name, staff)
                 musicelements = []
                 h.haslyrics[voicefragmentname] = False
-                previous_chord = None
                 vl = VoiceLeader()
 
                 for harmonyelement in song["harmony"]:
@@ -256,7 +254,6 @@ class StyleCompiler(object):
                                                                                                            staff) + \
                                                                                                        cleanup_string_for_lilypond(
                                                                                                            c)))
-                                previous_chord = c
                             elif self.to_be_derived_from_existing(c): # calculate from previous chord
                                 cname = cleanup_string_for_lilypond("{0}".format(c))
                                 vname = self.voicename(name,staff) + cname
@@ -300,7 +297,6 @@ class StyleCompiler(object):
                                     vl = VoiceLeader()
                                     l = Lily2Stream()
                                     s = l.parse(fragment)
-                                    note_stream = s.flat.getElementsByClass(["Note"])
                                     vlmethod = self.voiceleading_method(style, name, staff)
 
                                     self.transform_note_stream(s, source_scale, target_scale, vl, vlmethod)
@@ -353,9 +349,6 @@ class StyleCompiler(object):
                                                                                                          destpitch,
                                                                                                        "\\"+vname))
                                     self.register_chord(name, staff, c, new_fragment, knownchords, chorddefinitions)
-
-                                previous_chord = c
-
                             else:
                                 musicelements.append(c)
 
