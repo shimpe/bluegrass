@@ -1,5 +1,6 @@
 song:
       style : "bluegrass"
+      rhythm: "beat"
       header:
           title : "test"
           composer : "shiihs"
@@ -12,76 +13,44 @@ song:
               to : "c"
           - chords :
               >
+                  I I       | IV IV     | I I       | V V7      |
+                  I I7      | IV IVm    | I V7      | I I       |
+                  I I7      | IV IVm    | I V7      | I I       |
+                  IIIm IIIm | IV IV     | IIm V7    | I I       |
+                  IIIm IIIm | IV IV     | IIm V7    | I I       |
+                  I I7      | IV IVm    | I V7      | I I       |
+                  I I7      | IV IVm    | I V7      | I I       |
+                  IIIm IIIm | VIm VIm   | IIm IIm   | V V7      |
+                  I I7      | IV IVm    | I V7      | I I       |
+                  I I7      | IV IVm    | I V7      | I I       |
+                  V V7      | I I7      | IV IV7    | V V7      |
+                  I I7      | IV IVm    | I V7      | I I       |
+                  I I7      | IV IVm    | I V7      | I I       |
+                  IIIm IIIm | VIm VIm7  | IIm II7   | V V7      |
+                  I I7      | IV IV7    | V V7      | I I       |
+                  I III     | VIm VIm   | IIm  V7   | I  I      |
+                  I III     | VIm IV    | IIm  V7   | I I7      |
+                  IV IVm7   | I V7      | I VIb7    | IV7 VIb7  |
                   I I       |
-                  IV IV     |
-                  I I       |
-                  V V7      |
-                  I I7      |
-                  IV IVm    |
-                  I V7      |
-                  I I       |
-                  I I7      |
-                  IV IVm    |
-                  I V7      |
-                  I I       |
-                  IIIm IIIm |
-                  IV IV     |
-                  IIm V7    |
-                  I I       |
-                  IIIm IIIm |
-                  IV IV     |
-                  IIm V7    |
-                  I I       |
-                  I I7      |
-                  IV IVm    |
-                  I V7      |
-                  I I       |
-                  I I7      |
-                  IV IVm    |
-                  I V7      |
-                  I I       |
-                  IIIm IIIm |
-                  VIm VIm   |
-                  IIm IIm   |
-                  V V7      |
-                  I I7      |
-                  IV IVm    |
-                  I V7      |
-                  I I       |
-                  I I7      |
-                  IV IVm    |
-                  I V7      |
-                  I I       |
-                  V V7      |
-                  I I7      |
-                  IV IV7    |
-                  V V7      |
-                  I I7      |
-                  IV IVm    |
-                  I V7      |
-                  I I       |
-                  I I7      |
-                  IV IVm    |
-                  I V7      |
-                  I I       |
-                  IIIm IIIm |
-                  VIm VIm7  |
-                  IIm II7   |
-                  V V7      |
-                  I I7      |
-                  IV IV7    |
-                  V V7      |
-                  I I       |
-                  I III     |
-                  VIm VIm   |
-                  IIm  V7   |
-                  I  I      |
-                  I III     |
-                  VIm IV    |
-                  IIm  V7   |
-                  I I7      |
-                  IV IVm7   |
-                  I V7      |
-                  I VIb7    |
-                  IV7 VIb7  |
-                  I I       |
+      percussion:
+          - patterns:
+              >
+                  Ia Ib     | Ic Id     | Ia Ib     | Ic Id     |
+                  Ia Ib     | Ic Id     | Ia Ib     | Ic Id     |
+                  Ia Ib     | Ic Id     | Ia Ib     | Ic Id     |
+                  Ia Ib     | Ic Id     | Ia Ib     | Ic Id     |
+                  Ia Ib     | Ic Id     | Ia Ib     | Ic Id     |
+                  Ia Ib     | Ic Id     | Ia Ib     | Ic Id     |
+                  Ia Ib     | Ic Id     | Ia Ib     | Ic Id     |
+                  Ia Ib     | Ic Id     | Ia Ib     | Ic Id     |
+                  Ia Ib     | Ic Id     | Ia Ib     | Ic Id     |
+                  Ia Ib     | Ic Id     | Ia Ib     | Ic Id     |
+                  Ia Ib     | Ic Id     | Ia Ib     | Ic Id     |
+                  Ia Ib     | Ic Id     | Ia Ib     | Ic Id     |
+                  Ia Ib     | Ic Id     | Ia Ib     | Ic Id     |
+                  Ia Ib     | Ic Id     | Ia Ib     | Ic Id     |
+                  Ia Ib     | Ic Id     | Ia Ib     | Ic Id     |
+                  Ia Ib     | Ic Id     | Ia Ib     | Ic Id     |
+                  Ia Ib     | Ic Id     | Ia Ib     | Ic Id     |
+                  Ia Ib     | Ic Id     | Ia Ib     | Ic Id     |
+                  Ia Ib     |

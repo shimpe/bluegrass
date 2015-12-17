@@ -26,6 +26,14 @@ ${fragment}
 %   endfor
 % endfor
 
+% for p in patterndefinitions:
+
+%%%% drum track ${p}
+%   for fragment in patterndefinitions[p]:
+${fragment}
+%   endfor
+% endfor
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% begin of song voice definitions (made from style fragments)
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

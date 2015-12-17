@@ -16,6 +16,7 @@ class HarvestedProperties(object):
          - sorted_song_tracks = list of track name (string) in the order in which they appear in the song file
          - stafftypes = map of track name (string) to tuple of (stafftype, voicefragmentname)
          - staffproperties = map of voice fragment name (string) to a list of staff properties (lilypond properties)
+         - staffoverrides = map of voice fragment name (string) to a list of staff overrides (lilypond properties)
         """
 
         self.voicedefinitions = []
@@ -26,3 +27,4 @@ class HarvestedProperties(object):
         self.sorted_song_tracks = []
         self.stafftypes = defaultdict(list)
         self.staffproperties = defaultdict(list)
+        self.staffoverrides=defaultdict(list)

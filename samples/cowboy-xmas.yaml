@@ -1,5 +1,6 @@
 song:
       style : "bluegrass"
+      rhythm: "beat"
       header:
           title : "Happy Xmas Cowboy"
           composer : "shiihs"
@@ -48,6 +49,42 @@ song:
                   I I |
                   I I |
                   I I |
+
+      percussion :
+        - patterns:
+                  Ia Ib
+                  Ic Id
+                  Ia Ib
+                  Ic Id
+                  Ia Ib
+                  Ic Id
+                  Ia Ib
+                  Ic Id
+                  Ia Ib
+                  Ic Id
+                  Ia Ib
+                  Ic Id
+                  Ia Ib
+                  Ic Id
+                  Ia Ib
+                  Ic Id
+                  Ia Ib
+                  Ic Id
+                  Ia Ib
+                  Ic Id
+                  Ia Ib
+                  Ic Id
+                  Ia Ib
+                  Ic Id
+                  Ia Ib
+                  Ic Id
+                  Ia Ib
+                  Ic Id
+                  Ia Ib
+                  Ic Id
+                  Ia Ib
+                  Ic Id
+
       tracks:
           tenor:
               type : "Staff"
