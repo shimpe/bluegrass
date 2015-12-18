@@ -1,0 +1,37 @@
+# bluegrass style
+# (C) 2015 stefaan himpe
+style:
+      name : 'beat'
+      global:
+          time : "4/4"
+      tracks :
+          timbales :
+              type : "DrumStaff"
+              instrumentName : "timbales"
+              staves :
+                  timbales:
+                      staffProperties:
+                          drumStyleTable : "#timbales-style"
+                          midiMinimumVolume : "#0.7"
+                          midiMaximumVolume:  "#0.9"
+                      staffOverrides:
+                          StaffSymbol.line-count : "#2"
+                          BarLine.bar-extent : "#'(-1 . 1)"
+                      patterns :
+                          Ia : "{ \\drummode { timh4 ssh } }"
+                          Ib : "{ \\drummode { timl8 ssh r timh } }"
+                          Ic : "{ \\drummode { r4 ssh8 timl } }"
+                          Id : "{ \\drummode { r4 cb8 cb } }"
+          drums :
+              type : "DrumStaff"
+              instrumentName : "drums"
+              staves :
+                  drums:
+                      staffProperties:
+                          midiMinimumVolume : "#0.7"
+                          midiMaximumVolume:  "#0.9"
+                      patterns : 
+                          Ia : "{\\drummode {<< \\new DrumVoice { \\voiceOne cymc4.^\"crash\" hhc16^\"h.h.\" hh } \\new DrumVoice { \\voiceTwo bd4 sn8 bd } >>} }"
+                          Ib : "{\\drummode {<< \\new DrumVoice { \\voiceOne hhc8 hho hhc8 hh16 hh } \\new DrumVoice { \\voiceTwo bd4 << bd ss >>  } >> } }"
+                          Ic : "{\\drummode {<< \\new DrumVoice { \\voiceOne hhc4 r4 } \\new DrumVoice { \\voiceTwo bd8 tommh tommh bd  } >> } }"
+                          Id : "{\\drummode {<< \\new DrumVoice { \\voiceOne r2 } \\new DrumVoice { \\voiceTwo toml8 toml bd tomfh16 tomfh } >> } }"
