@@ -3,6 +3,7 @@ song:
       rhythm: "beat"
       header:
           title : "test"
+          subtitle : "generated using BlueGrass"
           composer : "shiihs"
       global:
           key : "c \\major"
@@ -35,22 +36,24 @@ song:
       percussion:
           - patterns:
               >
-                  Ia Ib     | Ic Id     | Ia Ib     | Ic Id     |
-                  Ia Ib     | Ic Id     | Ia Ib     | Ic Id     |
-                  Ia Ib     | Ic Id     | Ia Ib     | Ic Id     |
-                  Ia Ib     | Ic Id     | Ia Ib     | Ic Id     |
-                  Ia Ib     | Ic Id     | Ia Ib     | Ic Id     |
-                  Ia Ib     | Ic Id     | Ia Ib     | Ic Id     |
-                  Ia Ib     | Ic Id     | Ia Ib     | Ic Id     |
-                  Ia Ib     | Ic Id     | Ia Ib     | Ic Id     |
-                  Ia Ib     | Ic Id     | Ia Ib     | Ic Id     |
-                  Ia Ib     | Ic Id     | Ia Ib     | Ic Id     |
-                  Ia Ib     | Ic Id     | Ia Ib     | Ic Id     |
-                  Ia Ib     | Ic Id     | Ia Ib     | Ic Id     |
-                  Ia Ib     | Ic Id     | Ia Ib     | Ic Id     |
-                  Ia Ib     | Ic Id     | Ia Ib     | Ic Id     |
-                  Ia Ib     | Ic Id     | Ia Ib     | Ic Id     |
-                  Ia Ib     | Ic Id     | Ia Ib     | Ic Id     |
-                  Ia Ib     | Ic Id     | Ia Ib     | Ic Id     |
-                  Ia Ib     | Ic Id     | Ia Ib     | Ic Id     |
-                  Ia Ib     |
+                  Ib Ib     | Ib Ib     | Ib Ib     | Ib Ib     |
+                  Ib Ib     | Ib Ib     | Ia Ib     | Ic Id     |
+                  Ib Ib     | Ib Ib     | Ib Ib     | Ib Ib     |
+                  Ib Ib     | Ib Ib     | Ia Ib     | Ic Id     |
+                  Ib Ib     | Ib Ib     | Ib Ib     | Ib Ib     |
+                  Ib Ib     | Ib Ib     | Ia Ib     | Ic Id     |
+                  Ib Ib     | Ib Ib     | Ib Ib     | Ib Ib     |
+                  Ib Ib     | Ib Ib     | Ia Ib     | Ic Id     |
+                  Ib Ib     | Ib Ib     | Ib Ib     | Ib Ib     |
+                  Ib Ib     | Ib Ib     | Ia Ib     | Ic Id     |
+                  Ib Ib     | Ib Ib     | Ib Ib     | Ib Ib     |
+                  Ib Ib     | Ib Ib     | Ia Ib     | Ic Id     |
+                  Ib Ib     | Ib Ib     | Ib Ib     | Ib Ib     |
+                  Ib Ib     | Ib Ib     | Ia Ib     | Ic Id     |
+                  Ib Ib     | Ib Ib     | Ib Ib     | Ib Ib     |
+                  Ib Ib     | Ib Ib     | Ia Ib     | Ic Id     |
+                  Ib Ib     | Ib Ib     | Ib Ib     | Ib Ib     |
+                  Ib Ib     | Ib Ib     | Ia Ib     | Ic Id     |
+                  Ib Ib     |
+
+

@@ -19,8 +19,6 @@ style:
                       chords :
                           I : "{c'16 g' e' c' g' e' c' e'}"
                           I7: "{bes'16 g' e' bes' g' e' bes' e'}"
-#                          IV : "{c'16 a' f' c' a' f' c' f'}"
-#                          V : "{g16 g' d' b g' d' b d'}"
                           StepUp : "{c'16 g' e' c' g' e' c' e'}"
                           Rest: "{r2}"
           lowerbanjo :
@@ -34,8 +32,6 @@ style:
                       chords : 
                           I : "{g'16 e' c'' g' e' c'' g' e'}"
                           I7: "{g'16 e' bes' g' e' bes' g' e'}"
-#                          IV : "{ a'16 f' c'' a' f' c'' a'f'}"
-#                          V : "{ b'16 d' b' g' d' b' g' d' }"
                           StepUp : "{g'16 e' c'' g' e' c'' g' e'}"
                           Rest: "{r2}"
           bass :
@@ -50,8 +46,6 @@ style:
                       chords :
                           I : "{ c,4 g,,}"
                           I7: "{ c,4 g,,}"
-#                          IV : "{f,4 c,}"
-#                          V : "{ g,,4 d,}"
                           StepUp : "{ c,4 cis,4 }"
                           Rest: "{r2}"
           piano:
@@ -65,8 +59,6 @@ style:
                       chords :
                           I : "{ r8 <g' c'' e''>4 <g' c'' e''>8 }"
                           I7 : "{ r8 <g' bes' e''>4 <g' bes' e''>8 }"
-#                          IV : "{ r8 <a' c'' f''>4 <a' c'' f''>8 }"
-#                          V : "{ r8 <g' b'' d''>4 <b' b'' d''>8 }"
                           StepUp : "{ r8 <g' c'' e''>4 <g' c'' e''>8 }"
                           Rest : "{r1}"
                   piano-left :
@@ -77,8 +69,6 @@ style:
                       chords :
                           I : "{c8 c'4 g8 }"
                           I7 : " {c8 c'4 g8 }"
-#                          IV : "{\\transpose c c,{ f'8 f''4 c'8}}"
-#                          V : "{\\transpose c c, {g'8 g''4 d'8}}"
                           StepUp : "{\\transpose c c, {c'4 cis'4}}"
                           Rest : "{r1}"
                           
