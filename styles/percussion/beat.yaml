@@ -31,7 +31,43 @@ style:
                           midiMinimumVolume : "#0.7"
                           midiMaximumVolume:  "#0.9"
                       patterns : 
-                          Ia : "{\\drummode {<< \\new DrumVoice { \\voiceOne cymc4.^\"crash\" hhc16^\"h.h.\" hh } \\new DrumVoice { \\voiceTwo bd4 sn8 bd } >>} }"
-                          Ib : "{\\drummode {<< \\new DrumVoice { \\voiceOne hhc8 hho hhc8 hh16 hh } \\new DrumVoice { \\voiceTwo bd4 << bd ss >>  } >> } }"
-                          Ic : "{\\drummode {<< \\new DrumVoice { \\voiceOne hhc4 r4 } \\new DrumVoice { \\voiceTwo bd8 tommh tommh bd  } >> } }"
-                          Id : "{\\drummode {<< \\new DrumVoice { \\voiceOne r2 } \\new DrumVoice { \\voiceTwo toml8 toml bd tomfh16 tomfh } >> } }"
+                          Ia :
+                            >
+                                {\drummode {
+                                  <<
+                                      \new DrumVoice {
+                                          \voiceOne cymc4.^"crash" hhc16^"h.h." hh }
+                                      \new DrumVoice {
+                                          \voiceTwo bd4 sn8 bd }
+                                  >>}
+                                }
+                          Ib :
+                            >
+                                {\drummode {
+                                  <<
+                                      \new DrumVoice {
+                                          \voiceOne hhc8 hho hhc8 hh16 hh }
+                                      \new DrumVoice {
+                                          \voiceTwo bd4 << bd ss >>  }
+                                  >>}
+                                }
+                          Ic :
+                            >
+                                {\drummode {
+                                  <<
+                                      \new DrumVoice {
+                                          \voiceOne hhc4 r4 }
+                                      \new DrumVoice {
+                                          \voiceTwo bd8 tommh tommh bd }
+                                  >> }
+                                }
+                          Id :
+                            >
+                                {\drummode {
+                                  <<
+                                    \new DrumVoice {
+                                        \voiceOne r2 }
+                                    \new DrumVoice {
+                                        \voiceTwo toml8 toml bd tomfh16 tomfh }
+                                  >> }
+                                }

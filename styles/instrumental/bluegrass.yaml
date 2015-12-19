@@ -69,6 +69,5 @@ style:
                       chords :
                           I : "{c8 c'4 g8 }"
                           I7 : " {c8 c'4 g8 }"
-                          StepUp : "{\\transpose c c, {c'4 cis'4}}"
+                          StepUp : "{c4 cis4}"
                           Rest : "{r1}"
-                          
