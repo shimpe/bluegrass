@@ -1,5 +1,6 @@
 from collections import defaultdict
 
+
 class HarvestedProperties(object):
     def __init__(self):
         """
@@ -27,4 +28,4 @@ class HarvestedProperties(object):
         self.sorted_song_tracks = []
         self.stafftypes = defaultdict(list)
         self.staffproperties = defaultdict(list)
-        self.staffoverrides=defaultdict(list)
+        self.staffoverrides = defaultdict(list)

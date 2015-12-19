@@ -5,7 +5,13 @@ numeral_map = tuple(zip(
     ('M', 'CM', 'D', 'CD', 'C', 'XC', 'L', 'XL', 'X', 'IX', 'V', 'IV', 'I')
 ))
 
+
 def int_to_roman(i):
+    """
+    convert integer to roman number
+    :param i: integer
+    :return: roman number (string)
+    """
     result = []
     for integer, numeral in numeral_map:
         count = i // integer
@@ -13,7 +19,13 @@ def int_to_roman(i):
         i -= integer * count
     return ''.join(result)
 
+
 def roman_to_int(n):
+    """
+    convert roman number to integer
+    :param n: roman number (string)
+    :return: integer
+    """
     i = result = 0
     for integer, numeral in numeral_map:
         while n[i:i + len(numeral)] == numeral:
@@ -22,10 +34,11 @@ def roman_to_int(n):
     return result
 
 _nums = ('', 'One', 'Two', 'Three', 'Four', 'Five', 'Six', 'Seven', 'Eight',
-    'Nine', 'Ten', 'Eleven', 'Twelve', 'Thirteen', 'Fourteen', 'Fifteen',
-    'Sixteen', 'Seventeen', 'Eighteen', 'Nineteen')
+         'Nine', 'Ten', 'Eleven', 'Twelve', 'Thirteen', 'Fourteen', 'Fifteen',
+         'Sixteen', 'Seventeen', 'Eighteen', 'Nineteen')
 
-_tens = ( 'Twenty', 'Thirty', 'Forty', 'Fifty', 'Sixty', 'Seventy', 'Eighty', 'Ninety')
+_tens = ('Twenty', 'Thirty', 'Forty', 'Fifty', 'Sixty', 'Seventy', 'Eighty', 'Ninety')
+
 
 def int_to_text(number):
     """Converts an integer to the English language name of that integer.
@@ -34,6 +47,9 @@ def int_to_text(number):
     This can be used in LilyPond identifiers (that do not support digits).
 
     Included from python-ly project
+
+    :param number : an integer (e.g 42)
+    :return string that describes the number (e.g. FortyTwo)
     """
     result = []
     if number >= 1000:
@@ -50,6 +66,7 @@ def int_to_text(number):
     text = "".join(result)
     return text or 'Zero'
 
+
 def int_to_letter(number, chars=string.ascii_uppercase):
     """Converts an integer to one or more letters.
     
@@ -58,7 +75,10 @@ def int_to_letter(number, chars=string.ascii_uppercase):
     
     chars is the string to pick characters from, defaulting to
     string.ascii_uppercase.
-    
+
+    :param number: an integer
+    :param chars: alfabeth from which to choose characters to encode number
+    :return: the integer encoded in a series of characters
     """
     mod = len(chars)
     result = []
@@ -66,6 +86,7 @@ def int_to_letter(number, chars=string.ascii_uppercase):
         number, c = divmod(number - 1, mod)
         result.append(c)
     return "".join(chars[c] for c in reversed(result))
+
 
 def starts_with_one_of(strng, list_of_strings):
     """
@@ -78,8 +99,15 @@ def starts_with_one_of(strng, list_of_strings):
             return True
     return False
 
+
 def is_valid_music_numeral(s):
+    """
+    checks if given roman number makes sense as a scale degree
+    :param s: roman numeral (string)
+    :return: true if valid scale degree, false otherwise
+    """
     return s in ["I", "II", "III", "IV", "V", "VI", "VII", "VIII"]
+
 
 def split_roman_prefix(s):
     """
@@ -92,7 +120,6 @@ def split_roman_prefix(s):
         if i > 0:
             prefix = s[:i]
             if is_valid_music_numeral(prefix):
-                num = roman_to_int(prefix)
                 suffix = s[i:]
                 accidental = ""
                 if starts_with_one_of(suffix, ["bb", "##"]):
@@ -106,14 +133,14 @@ def split_roman_prefix(s):
 
 
 if __name__ == "__main__":
-    print (int_to_roman(7))
-    print (int_to_roman(1832))
-    print (roman_to_int("IX"))
-    print (roman_to_int("VII"))
-    print (roman_to_int("XM"))
-    print (int_to_text(12323))
-    print (int_to_letter(28))
-    print (split_roman_prefix("IVm"))
-    print (split_roman_prefix("IV"))
+    print(int_to_roman(7))
+    print(int_to_roman(1832))
+    print(roman_to_int("IX"))
+    print(roman_to_int("VII"))
+    print(roman_to_int("XM"))
+    print(int_to_text(12323))
+    print(int_to_letter(28))
+    print(split_roman_prefix("IVm"))
+    print(split_roman_prefix("IV"))
 
 

@@ -30,7 +30,7 @@ def cleanup_string_for_lilypond(s):
     :param s: string
     :return: lilypondified string
     """
-    c = s.replace("_", "").replace("-", "").replace("##", "dblsharp").replace("#", "sharp").replace("\n","")
+    c = s.replace("_", "").replace("-", "").replace("##", "dblsharp").replace("#", "sharp").replace("\n", "")
     import re
     nums = re.compile("\d+")
     numbers = [int(n) for n in re.findall(nums, c)]
@@ -63,7 +63,8 @@ class StyleCompiler(object):
             print("*** Error: couldn't load style file {0}. {1}".format(fname, sys.exc_info()[0]))
         return style
 
-    def load_song(self, songname):
+    @staticmethod
+    def load_song(songname):
         song = ""
         fname = songname
         try:
@@ -76,16 +77,18 @@ class StyleCompiler(object):
             print("*** Error: couldn't load song file {0}. {1}".format(fname, sys.exc_info()[0]))
         return song
 
-    def fragmentname(self, trackname, staffname, chordname):
+    @staticmethod
+    def fragmentname(trackname, staffname, chordname):
         ct = cleanup_string_for_lilypond(trackname)
         cs = cleanup_string_for_lilypond(staffname)
         cc = cleanup_string_for_lilypond(chordname)
         return ct + cs + cc
 
-    def voicename(self, trackname, staffname):
+    @staticmethod
+    def voicename(trackname, staffname):
         ct = cleanup_string_for_lilypond(trackname)
         cs = cleanup_string_for_lilypond(staffname)
-        return ct + cs;
+        return ct + cs
 
     def voicefragmentname(self, trackname, staffname):
         return self.voicename(trackname, staffname) + "Voice"
@@ -146,9 +149,8 @@ class StyleCompiler(object):
         if self.options.outputfile:
             filename = os.path.abspath(self.options.outputfile[0])
             if os.path.isfile(filename) and not self.options.force:
-                print(
-                        "*** REFUSING TO OVERWRITE EXISTING OUTPUT FILE {0}! QUIT. (use --force to overwrite existing files).".format(
-                                self.options.outputfile))
+                print("*** REFUSING TO OVERWRITE EXISTING OUTPUT FILE {0}! QUIT. "+\
+                      "(use --force to overwrite existing files).".format(self.options.outputfile))
                 sys.exit(1)
             elif os.path.isfile(filename) and self.options.force:
                 print("*** WARNING: OVERWRITING EXISTING OUTPUT FILE {0} AS REQUESTED!".format(self.options.outputfile))
@@ -202,10 +204,10 @@ class StyleCompiler(object):
             elif stafftype == "PianoStaff":
                 lyricsname = {}
                 sorted_voices = []
+                stafftemplate = Template(filename=os.path.join(self.rootpath, "ly-templates", "PianoStaff.mako"))
                 for i, voice in enumerate(harvestedproperties.stafftypes[staffname]):
                     voicename = voice[1]
                     sorted_voices.append((int_to_roman(i + 1), voicename))
-                    stafftemplate = Template(filename=os.path.join(self.rootpath, "ly-templates", "PianoStaff.mako"))
                     lyricsname[voicename] = None
                     if harvestedproperties.haslyrics[voicename]:
                         lyricsname[voicename] = voicename + "Lyrics"
@@ -223,9 +225,9 @@ class StyleCompiler(object):
                 for voice in harvestedproperties.stafftypes[staffname]:
                     voicename = voice[1]
                     staffprops = harvestedproperties.staffproperties[voicename] if voicename in \
-                                                                                   harvestedproperties.staffproperties else []
+                                 harvestedproperties.staffproperties else []
                     staffoverr = harvestedproperties.staffoverrides[voicename] if voicename in \
-                                                                                  harvestedproperties.staffoverrides else []
+                                 harvestedproperties.staffoverrides else []
                     stafftemplate = Template(filename=os.path.join(self.rootpath, "ly-templates", "DrumStaff.mako"))
                     staffdefinition = stafftemplate.render(
                             staffname=staffname + "DrumStaff",
@@ -326,10 +328,9 @@ class StyleCompiler(object):
                                                                  cleanup_string_for_lilypond(c))
                                         else:
                                             musicelements.append("{{ \\transpose {0} {1} {{ {2} }} }}".format(refpitch,
-                                                                       destpitch,
-                                                                       "\\" + self.voicename(
-                                                                       name, staff) + \
-                                                                       cleanup_string_for_lilypond(c)))
+                                                                    destpitch,
+                                                                    "\\" + self.voicename(name, staff) + \
+                                                                    cleanup_string_for_lilypond(c)))
                                     elif self.to_be_derived_from_existing(c):  # calculate from previous chord
                                         cname = cleanup_string_for_lilypond("{0}".format(c))
                                         vname = self.voicename(name, staff) + cname
@@ -349,7 +350,7 @@ class StyleCompiler(object):
                                             # other types require explicit hints
                                             print("ERROR! Cannot find chord {0} in style file.".format(one_chord))
                                             print("Need it to calculate chord {0} in track {1}, staff {2}.".format(c,
-                                                                       name, staff))
+                                                  name, staff))
                                             print("Bailing out.")
                                             sys.exit(2)
 
@@ -385,7 +386,7 @@ class StyleCompiler(object):
                                                 musicelements.append("\\" + vname)
                                             else:
                                                 musicelements.append("{{ \\transpose {0} {1} {{ {2} }} }}".format(
-                                                        refpitch,destpitch,"\\" + vname))
+                                                        refpitch, destpitch, "\\" + vname))
                                             self.register_chord(name, staff, c, new_fragment, knownchords,
                                                                 chorddefinitions)
 
@@ -423,7 +424,7 @@ class StyleCompiler(object):
                                                 musicelements.append("\\" + vname)
                                             else:
                                                 musicelements.append("{{ \\transpose {0} {1} {{ {2} }} }}".format(
-                                                        refpitch,destpitch,"\\" + vname))
+                                                        refpitch, destpitch, "\\" + vname))
                                             self.register_chord(name, staff, c, new_fragment, knownchords,
                                                                 chorddefinitions)
                                     else:
@@ -431,7 +432,7 @@ class StyleCompiler(object):
 
                             elif "ly" in harmonyelement:
                                 e = harmonyelement["ly"]
-                                if type(e) == type([]):
+                                if isinstance(e, list):
                                     for el in e:
                                         musicelements.append(el)
                                 else:
@@ -522,7 +523,7 @@ class StyleCompiler(object):
 
                             elif "ly" in harmonyelement:
                                 e = harmonyelement["ly"]
-                                if type(e) == type([]):
+                                if isinstance(e, list):
                                     for el in e:
                                         musicelements.append(el)
                                 else:
@@ -534,7 +535,7 @@ class StyleCompiler(object):
 
         return h
 
-    def transform_chord_stream(self, s, source_scale, target_scale, vl, vlmethod):
+    def transform_chord_stream(s, source_scale, target_scale, vl, vlmethod):
         chord_stream = s.flat.getElementsByClass(["Chord"])
         if chord_stream:
             list_of_chordpitches = []
@@ -550,7 +551,7 @@ class StyleCompiler(object):
             for p, cs in enumerate(chord_stream):
                 cs.pitches = list_of_chordpitches[p]
 
-    def transform_note_stream(self, s, source_scale, target_scale, vl, vlmethod):
+    def transform_note_stream(s, source_scale, target_scale, vl, vlmethod):
         note_stream = s.flat.getElementsByClass(["Note"])
         if note_stream:
             pitches = [n.pitch for n in note_stream]
@@ -560,7 +561,7 @@ class StyleCompiler(object):
                 for p, n in enumerate(note_stream):
                     n.pitch = result[p]
 
-    def voiceleading_method(self, style, name, staff):
+    def voiceleading_method(style, name, staff):
         vlmethod = SHIIHS_VOICELEADING
         if "voiceLeadingMethod" in style["tracks"][name]["staves"][staff]:
             vlmethod = style["tracks"][name]["staves"][staff]["voiceLeadingMethod"]

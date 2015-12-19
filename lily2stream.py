@@ -1,11 +1,17 @@
 import ly.musicxml
 import music21
 
+
 class Lily2Stream(object):
+    """
+    class that converts simple lilypond fragments (containing only notes,rests and chords)
+    to music21 streams
+    """
     def __init__(self):
         pass
 
-    def parse(self, lytext=""):
+    @staticmethod
+    def parse(lytext=""):
         e = ly.musicxml.writer()
         e.parse_text(lytext)
         xml = e.musicxml()
@@ -13,7 +19,8 @@ class Lily2Stream(object):
         s = music21.converter.parse(m, format="musicxml")
         return s
 
-    def unparse(self, stream):
+    @staticmethod
+    def unparse(stream):
         lpc = music21.lily.translate.LilypondConverter()
         lp_music_list = music21.lily.lilyObjects.LyMusicList()
         lpc.context = lp_music_list
@@ -21,5 +28,6 @@ class Lily2Stream(object):
         return str(lpc.context)
 
 if __name__ == "__main__":
-    l = Lily2Stream();
-    l.parse("{ <a b> }").show("txt")
+    Lily2Stream.parse("{ <a b> }").show("txt")
+    l = Lily2Stream()
+    l.parse("{ a, b'' r <c d> }").show("txt")

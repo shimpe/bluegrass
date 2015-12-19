@@ -261,6 +261,7 @@ Here starts code written by Stefaan Himpe
 GPL License
 """
 
+
 class VoiceLeader(object):
     """
     class to calculate voice leading from one pattern to the next
@@ -269,7 +270,8 @@ class VoiceLeader(object):
     def __init__(self):
         pass
 
-    def add_accidental_to_pitch_accidental(self, pitch, accidental):
+    @staticmethod
+    def add_accidental_to_pitch_accidental(pitch, accidental):
         """
         :param pitch: a given pitch (with an optional accidental)
         :param accidental: new accidental to add on top of the existing accidental
@@ -335,17 +337,17 @@ class VoiceLeader(object):
         :return: to_fragment: new fragment with minimal voice leading distance to from_fragment
         """
         degrees_accidentals = [from_scale.getScaleDegreeAndAccidentalFromPitch(n) for n in from_fragment]
-        pitch_midi = { p.midi : p for p in  from_fragment }
+        pitch_midi = {p.midi: p for p in from_fragment}
         target_distance = to_scale.getTonic().midi - from_scale.getTonic().midi
 
         # to guarantee a suitable octave, only consider the pitches from the source fragment and target fragment
         # augmented with some margin (a third)
-        minPitch = music21.interval.Interval("M-3").transposePitch(pitch_midi[min(pitch_midi.keys())])
-        maxPitch = music21.interval.Interval("M3").transposePitch(
+        minpitch = music21.interval.Interval("M-3").transposePitch(pitch_midi[min(pitch_midi.keys())])
+        maxpitch = music21.interval.Interval("M3").transposePitch(
                 music21.interval.Interval(target_distance).transposePitch(pitch_midi[max(pitch_midi.keys())]))
 
-        target_pitches_without_accidentals = [to_scale.pitchFromDegree(d[0], minPitch=minPitch,
-                                                                       maxPitch=maxPitch) for d in degrees_accidentals]
+        target_pitches_without_accidentals = [to_scale.pitchFromDegree(d[0], minPitch=minpitch,
+                                                                       maxPitch=maxpitch) for d in degrees_accidentals]
         target_pitches = []
         if map_accidentals:
             for p, d in zip(target_pitches_without_accidentals, degrees_accidentals):
@@ -405,7 +407,7 @@ class VoiceLeader(object):
                     tlower.octave -= 1
                     tupper = copy.deepcopy(targetpitch)
                     tupper.octave += 1
-                    expanded_target_pitch = [ targetpitch, tlower, tupper]
+                    expanded_target_pitch = [targetpitch, tlower, tupper]
                     for t in expanded_target_pitch:
                         matrix[(srcpitch, t)] = self.calculate_cost(srcpitch, t)
 
@@ -463,7 +465,8 @@ class VoiceLeader(object):
         target_pitches_with_accidentals = [src2target[p] for p in from_fragment]
         return target_pitches_with_accidentals
 
-    def calculate_cost(self, srcpitch, targetpitch):
+    @staticmethod
+    def calculate_cost(srcpitch, targetpitch):
         # src2target_semitones = music21.interval.notesToChromatic(srcpitch, targetpitch).semitones % 12
         # target2src_semitones = music21.interval.notesToChromatic(targetpitch, srcpitch).semitones % 12
         # src2target_namediff = music21.interval.notesToChromatic(music21.pitch.Pitch(srcpitch.step),
