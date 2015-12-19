@@ -94,7 +94,7 @@ class StyleCompiler(object):
         return self.voicename(trackname, staffname) + "Voice"
 
     def lyricsfragmentname(self, trackname, staffname):
-        return self.voicenamefragmentname(trackname, staffname) + "Lyrics"
+        return self.voicefragmentname(trackname, staffname) + "Lyrics"
 
     def compile(self):
         # read song and style specs
@@ -107,7 +107,7 @@ class StyleCompiler(object):
 
         # read style specs
         style = self.init_style(song_style)
-        rhythm = self.init_percussion(song_rhythm)# read lilypond template
+        rhythm = self.init_percussion(song_rhythm)  # read lilypond template
 
         lytemplate = Template(filename=os.path.join(self.rootpath, "ly-templates", "score.mako"))
 
@@ -137,7 +137,7 @@ class StyleCompiler(object):
         if self.options.outputfile:
             filename = os.path.abspath(self.options.outputfile[0])
             if os.path.isfile(filename) and not self.options.force:
-                print("*** REFUSING TO OVERWRITE EXISTING OUTPUT FILE {0}! QUIT. "+\
+                print("*** REFUSING TO OVERWRITE EXISTING OUTPUT FILE {0}! QUIT. " +\
                       "(use --force to overwrite existing files).".format(self.options.outputfile))
                 sys.exit(1)
             elif os.path.isfile(filename) and self.options.force:
@@ -265,7 +265,7 @@ class StyleCompiler(object):
     def calculate_patterns(self, rhythm):
         patterndefinitions = {}
         knownpatterns = defaultdict(lambda: defaultdict(set))
-        if "tracks" in rhythm:
+        if rhythm  is not None and "tracks" in rhythm:
             for name in rhythm["tracks"]:
                 if name in patterndefinitions:
                     print("*** WARNING: drum track with name {0} is specified multiple times".format(name))
@@ -275,7 +275,6 @@ class StyleCompiler(object):
                     for pat in rhythm["tracks"][name]["staves"][staff]["patterns"]:
                         fragcontent = rhythm["tracks"][name]["staves"][staff]["patterns"][pat]
                         self.register_pattern(name, staff, pat, fragcontent, knownpatterns, patterndefinitions)
-
         return patterndefinitions, knownpatterns
 
     def register_chord(self, name, staff, chord, fragcontent, knownchords, chorddefinitions):
@@ -333,9 +332,9 @@ class StyleCompiler(object):
                                                                  cleanup_string_for_lilypond(c))
                                         else:
                                             musicelements.append("{{ \\transpose {0} {1} {{ {2} }} }}".format(refpitch,
-                                                                    destpitch,
-                                                                    "\\" + self.voicename(name, staff) + \
-                                                                    cleanup_string_for_lilypond(c)))
+                                                                 destpitch,
+                                                                 "\\" + self.voicename(name, staff) + \
+                                                                 cleanup_string_for_lilypond(c)))
                                     elif self.to_be_derived_from_existing(c):  # calculate from previous chord
                                         cname = cleanup_string_for_lilypond("{0}".format(c))
                                         vname = self.voicename(name, staff) + cname
@@ -592,7 +591,6 @@ class StyleCompiler(object):
             ("I", "VII##"): 13,
         }
         return d[("I", degree)] if ("I", degree) in d else 0
-
 
     def transform_chord_stream(self, s, source_scale, target_scale, vl, vlmethod):
         chord_stream = s.flat.getElementsByClass(["Chord"])
