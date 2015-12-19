@@ -30,7 +30,7 @@ def cleanup_string_for_lilypond(s):
     :param s: string
     :return: lilypondified string
     """
-    c = s.replace("_", "").replace("-", "").replace("##", "dblsharp").replace("#", "sharp")
+    c = s.replace("_", "").replace("-", "").replace("##", "dblsharp").replace("#", "sharp").replace("\n","")
     import re
     nums = re.compile("\d+")
     numbers = [int(n) for n in re.findall(nums, c)]
@@ -96,15 +96,18 @@ class StyleCompiler(object):
     def compile(self):
         # read song and style specs
         song = self.load_song(self.options.inputfile[0])
-        song_style = song["style"]
-        song_rhythm = song["rhythm"]
+        song_style = song["style"] if "style" in song else ""
+        song_rhythm = song["rhythm"] if "rhythm" in song else ""
         song_title = song["header"]["title"]
         song_writer = song["header"]["composer"]
         print("*** Rendering {0} by {1} to lilypond".format(song_title, song_writer))
 
         # read style specs
         style = self.load_style(os.path.join("styles", "instrumental"), song_style)
-        rhythm = self.load_style(os.path.join("styles", "percussion"), song_rhythm)
+        if song_rhythm:
+            rhythm = self.load_style(os.path.join("styles", "percussion"), song_rhythm)
+        else:
+            rhythm = None
 
         # read lilypond template
         lytemplate = Template(filename=os.path.join(self.rootpath, "ly-templates", "score.mako"))
@@ -112,7 +115,11 @@ class StyleCompiler(object):
         globalproperties = merge_dicts(style["global"], song["global"])
 
         chorddefinitions, knownchords = self.calculate_chord_definitions(style)
-        patterndefinitions, knownpatterns = self.calculate_patterns(rhythm)
+        if rhythm:
+            patterndefinitions, knownpatterns = self.calculate_patterns(rhythm)
+        else:
+            patterndefinitions, knownpatterns = None, None
+
         harvestedproperties = self.calculate_voice_definitions(knownchords, chorddefinitions, knownpatterns,
                                                                patterndefinitions, song, style, rhythm)
         stavedefinitions, tracktostaff = self.calculate_staff_definitions(harvestedproperties)
@@ -238,15 +245,16 @@ class StyleCompiler(object):
     def calculate_patterns(self, rhythm):
         patterndefinitions = {}
         knownpatterns = defaultdict(lambda: defaultdict(set))
-        for name in rhythm["tracks"]:
-            if name in patterndefinitions:
-                print("*** WARNING: drum track with name {0} is specified multiple times".format(name))
-            patterndefinitions[name] = []
+        if "tracks" in rhythm:
+            for name in rhythm["tracks"]:
+                if name in patterndefinitions:
+                    print("*** WARNING: drum track with name {0} is specified multiple times".format(name))
+                patterndefinitions[name] = []
 
-            for staff in rhythm["tracks"][name]["staves"]:
-                for pat in rhythm["tracks"][name]["staves"][staff]["patterns"]:
-                    fragcontent = rhythm["tracks"][name]["staves"][staff]["patterns"][pat]
-                    self.register_pattern(name, staff, pat, fragcontent, knownpatterns, patterndefinitions)
+                for staff in rhythm["tracks"][name]["staves"]:
+                    for pat in rhythm["tracks"][name]["staves"][staff]["patterns"]:
+                        fragcontent = rhythm["tracks"][name]["staves"][staff]["patterns"][pat]
+                        self.register_pattern(name, staff, pat, fragcontent, knownpatterns, patterndefinitions)
 
         return patterndefinitions, knownpatterns
 
@@ -457,7 +465,7 @@ class StyleCompiler(object):
                         h.voicedefinitions.append(rendered_lyrics)
                     else:
                         h.haslyrics[voicefragmentname] = False
-        if "tracks" in rhythm:
+        if rhythm is not None and "tracks" in rhythm:
             for name in rhythm["tracks"]:
                 if "instrumentName" in rhythm["tracks"][name]:
                     h.instrumentname[name] = rhythm["tracks"][name]["instrumentName"]

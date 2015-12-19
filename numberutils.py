@@ -87,6 +87,7 @@ def split_roman_prefix(s):
     :param s:(e.g. VIbm7)
     :return: (VI,b,m7)
     """
+    s = s.strip()
     for i in reversed(range(len(s)+1)):
         if i > 0:
             prefix = s[:i]

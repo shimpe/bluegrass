@@ -1,0 +1,36 @@
+# bluegrass style
+# (C) 2015 stefaan himpe
+style:
+      name : 'waltz'
+      global:
+          time : "3/4"
+      specified-relative-to :
+          key : "c"
+          mode : "major"
+      tracks :
+          guitar :
+              type : "Staff"
+              instrumentName : "guitar"
+              staves :
+                  guitar:
+                      staffProperties:
+                          midiInstrument : "acoustic guitar (nylon)"
+                      voiceLeadingMethod : 0
+                      chords :
+                          I : "{c'8 < g' c'' e'' > < g' c'' e''> g8 <g' c'' e''>8 < g' c'' e''>}"
+                          I7: "{c'8 < g' bes' e''> < g' bes' e''> g8 <g' bes' e''> <g' bes' e''>}"
+                          Rest: "{r2}"
+          bass :
+              type : "Staff"
+              instrumentName : "bass"
+              staves :
+                  bass :
+                      staffProperties:
+                          midiInstrument: "acoustic bass"
+                      voiceLeadingMethod : 0
+                      clef : "bass_8"
+                      chords :
+                          I : "{ c,4. g,,4. }"
+                          I7: "{ c,4. g,,4. }"
+                          Rest: "{r2}"
+                                    

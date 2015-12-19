@@ -1,0 +1,18 @@
+song:
+      style : "waltz"
+      header:
+          title : "test"
+          subtitle : "generated using BlueGrass"
+          composer : "shiihs"
+      global:
+          key : "c \\major"
+      midi:
+          tempo: 144
+      harmony:
+          - transpose:
+              to : "c"
+          - chords :
+              >
+                  VIm V IV IV IIm IIm III |
+
+

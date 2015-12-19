@@ -18,6 +18,7 @@ global = {
 %% begin of style fragment definitions
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+% if chorddefinitions:
 % for c in chorddefinitions:
 
 %%%% track ${c}
@@ -25,7 +26,9 @@ global = {
 ${fragment}
 %   endfor
 % endfor
+% endif
 
+% if patterndefinitions:
 % for p in patterndefinitions:
 
 %%%% drum track ${p}
@@ -33,6 +36,7 @@ ${fragment}
 ${fragment}
 %   endfor
 % endfor
+% endif
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% begin of song voice definitions (made from style fragments)
