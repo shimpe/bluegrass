@@ -1,0 +1,15 @@
+song:
+      rhythm: "beat"
+      header:
+          title : "test"
+          subtitle : "generated using BlueGrass"
+          composer : "shiihs"
+      global:
+          key : "c \\major"
+      midi:
+          tempo: 144
+      percussion:
+          - patterns:
+              >
+                  Ib Ib     | Ib Ib     | Ib Ib     | Ib Ib     |
+                  Ib Ib     | Ib Ib     | Ia Ib     | Ic Id     |
