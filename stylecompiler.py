@@ -106,21 +106,9 @@ class StyleCompiler(object):
         print("*** Rendering {0} by {1} to lilypond".format(song_title, song_writer))
 
         # read style specs
-        if song_style:
-            style = self.load_style(os.path.join("styles", "instrumental"), song_style)
-        else:
-            style = {}
-        if "global" not in style:
-            style["global"] = {}
+        style = self.init_style(song_style)
+        rhythm = self.init_percussion(song_rhythm)# read lilypond template
 
-        if song_rhythm:
-            rhythm = self.load_style(os.path.join("styles", "percussion"), song_rhythm)
-        else:
-            rhythm = {}
-        if "global" not in rhythm:
-            rhythm["global"] = {}
-
-        # read lilypond template
         lytemplate = Template(filename=os.path.join(self.rootpath, "ly-templates", "score.mako"))
 
         globalproperties = merge_dicts(style["global"], song["global"])
@@ -178,6 +166,23 @@ class StyleCompiler(object):
                                     stavedefinitions=stavedefinitions,
                                     parts=sorted_track_names,
                                     tempo=song["midi"]["tempo"]))
+
+    def init_from_file(self, subfolder, filename):
+        if filename:
+            loaded_style = self.load_style(os.path.join("styles", subfolder), filename)
+        else:
+            loaded_style = {}
+        if "global" not in loaded_style:
+            loaded_style["global"] = {}
+        return loaded_style
+
+    def init_percussion(self, song_rhythm):
+        rhythm = self.init_from_file("percussion", song_rhythm)
+        return rhythm
+
+    def init_style(self, song_style):
+        style = self.init_from_file("instrumental", song_style)
+        return style
 
     def calculate_staff_definitions(self, harvestedproperties):
         stavedefinitions = []
