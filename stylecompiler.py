@@ -305,7 +305,7 @@ class StyleCompiler(object):
                 else:
                     h.instrumentname[name] = name
                 h.sorted_style_tracks.append(name)
-                if name in style["tracks"] and "staves" in style["tracks"][name]["staves"]:
+                if name in style["tracks"] and "staves" in style["tracks"][name]:
                     for staff in style["tracks"][name]["staves"]:
                         destpitch = refpitch[:]  # reset for each staff
                         voicefragmentname = self.voicefragmentname(name, staff)
@@ -540,38 +540,6 @@ class StyleCompiler(object):
 
         return h
 
-    def transform_chord_stream(s, source_scale, target_scale, vl, vlmethod):
-        chord_stream = s.flat.getElementsByClass(["Chord"])
-        if chord_stream:
-            list_of_chordpitches = []
-            for cd in chord_stream:
-                pitches = [n.pitch for n in cd]
-                if pitches:
-                    result = vl.calculate(pitches, source_scale, target_scale,
-                                          reorder_notes=vlmethod, map_accidentals=True)
-                    this_chord = []
-                    for p, n in enumerate(cd.pitches):
-                        this_chord.append(result[p])
-                    list_of_chordpitches.append(this_chord)
-            for p, cs in enumerate(chord_stream):
-                cs.pitches = list_of_chordpitches[p]
-
-    def transform_note_stream(s, source_scale, target_scale, vl, vlmethod):
-        note_stream = s.flat.getElementsByClass(["Note"])
-        if note_stream:
-            pitches = [n.pitch for n in note_stream]
-            if pitches:
-                result = vl.calculate(pitches, source_scale, target_scale,
-                                      reorder_notes=vlmethod, map_accidentals=True)
-                for p, n in enumerate(note_stream):
-                    n.pitch = result[p]
-
-    def voiceleading_method(style, name, staff):
-        vlmethod = SHIIHS_VOICELEADING
-        if "voiceLeadingMethod" in style["tracks"][name]["staves"][staff]:
-            vlmethod = style["tracks"][name]["staves"][staff]["voiceLeadingMethod"]
-        return vlmethod
-
     def to_be_derived_from_existing(self, c):
         return starts_with_one_of(c.upper(), ["III", "II", "IV", "I", "VII", "VI", "V"])
 
@@ -624,3 +592,37 @@ class StyleCompiler(object):
             ("I", "VII##"): 13,
         }
         return d[("I", degree)] if ("I", degree) in d else 0
+
+
+    def transform_chord_stream(self, s, source_scale, target_scale, vl, vlmethod):
+        chord_stream = s.flat.getElementsByClass(["Chord"])
+        if chord_stream:
+            list_of_chordpitches = []
+            for cd in chord_stream:
+                pitches = [n.pitch for n in cd]
+                if pitches:
+                    result = vl.calculate(pitches, source_scale, target_scale,
+                                          reorder_notes=vlmethod, map_accidentals=True)
+                    this_chord = []
+                    for p, n in enumerate(cd.pitches):
+                        this_chord.append(result[p])
+                    list_of_chordpitches.append(this_chord)
+            for p, cs in enumerate(chord_stream):
+                cs.pitches = list_of_chordpitches[p]
+
+    def transform_note_stream(self, s, source_scale, target_scale, vl, vlmethod):
+        note_stream = s.flat.getElementsByClass(["Note"])
+        if note_stream:
+            pitches = [n.pitch for n in note_stream]
+            if pitches:
+                result = vl.calculate(pitches, source_scale, target_scale,
+                                      reorder_notes=vlmethod, map_accidentals=True)
+                for p, n in enumerate(note_stream):
+                    n.pitch = result[p]
+
+    def voiceleading_method(self, style, name, staff):
+        vlmethod = SHIIHS_VOICELEADING
+        if "voiceLeadingMethod" in style["tracks"][name]["staves"][staff]:
+            vlmethod = style["tracks"][name]["staves"][staff]["voiceLeadingMethod"]
+        return vlmethod
+
