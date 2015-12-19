@@ -339,17 +339,25 @@ class StyleCompiler(object):
                                         cname = cleanup_string_for_lilypond("{0}".format(c))
                                         vname = self.voicename(name, staff) + cname
                                         number, accidental, modifier = split_roman_prefix(c)
-                                        one_chord = "I" + modifier
+                                        if "_" in modifier:
+                                            msplit = modifier.split("_")
+                                            modifier_without_suffix = msplit[1]
+                                            modifier_without_prefix = msplit[0]
+                                        else:
+                                            modifier_without_suffix = modifier
+                                            modifier_without_prefix = modifier
+                                        one_chord = "I" + modifier_without_suffix
 
-                                        if "I" not in knownchords[name][staff]:
+                                        if one_chord not in knownchords[name][staff]:
                                             print("ERROR! Style always needs at least specification of the I chord.")
                                             print("In case of track {0}, staff {1} we couldn't find it.".format(
                                                     name, staff))
                                             print("Bailing out.")
                                             sys.exit(1)
 
-                                        if one_chord not in knownchords[name][staff] and (
-                                                not modifier.startswith("m")) and modifier != "":
+                                        if one_chord not in knownchords[name][staff] and \
+                                                not modifier_without_prefix.startswith("m") and \
+                                                modifier_without_prefix != "":
                                             # minor can be calculated from major if needed;
                                             # other types require explicit hints
                                             print("ERROR! Cannot find chord {0} in style file.".format(one_chord))
@@ -358,7 +366,8 @@ class StyleCompiler(object):
                                             print("Bailing out.")
                                             sys.exit(2)
 
-                                        elif one_chord not in knownchords[name][staff] and modifier.startswith("m"):
+                                        elif one_chord not in knownchords[name][staff] and \
+                                                modifier_without_prefix.startswith("m"):
                                             #
                                             # e.g. you try to calculat VIm but Im doesn't exist in the style file
                                             # in that case: calculate VIm from I.
@@ -410,7 +419,7 @@ class StyleCompiler(object):
                                             target_interval = music21.interval.Interval(target_distance)
                                             target_pitch = music21.interval.transposePitch(sourcepitch, target_interval)
                                             target_scale = music21.scale.MajorScale(target_pitch.name)
-                                            if "m" in modifier:
+                                            if "m" in modifier_without_prefix:
                                                 target_scale = music21.scale.MinorScale(target_pitch.name)
                                             # start from Im7 to calculate VIm7
                                             fragment = style["tracks"][name]["staves"][staff]["chords"][one_chord]
