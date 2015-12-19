@@ -297,208 +297,14 @@ class StyleCompiler(object):
         else:
             refpitch = "c"
 
-        if "tracks" in style:
-            for name in style["tracks"]:
-                if "instrumentName" in style["tracks"][name]:
-                    h.instrumentname[name] = style["tracks"][name]["instrumentName"]
-                else:
-                    h.instrumentname[name] = name
-                h.sorted_style_tracks.append(name)
-                if name in style["tracks"] and "staves" in style["tracks"][name]:
-                    for staff in style["tracks"][name]["staves"]:
-                        destpitch = refpitch[:]  # reset for each staff
-                        voicefragmentname = self.voicefragmentname(name, staff)
-                        h.stafftypes[name].append((style["tracks"][name]["type"], voicefragmentname))
-                        h.staffproperties[voicefragmentname].append(
-                                style["tracks"][name]["staves"][staff]["staffProperties"])
-                        h.hasclef[voicefragmentname] = "treble"
-                        if "clef" in style["tracks"][name]["staves"][staff]:
-                            h.hasclef[voicefragmentname] = style["tracks"][name]["staves"][staff]["clef"]
-                        staff_voice_template = Template(filename=os.path.join(self.rootpath,
-                                                                              "ly-templates", "voice.mako"))
-                        musicelements = []
-                        h.haslyrics[voicefragmentname] = False
-                        vl = VoiceLeader()
-
-                        for harmonyelement in song["harmony"]:
-                            if "chords" in harmonyelement:
-                                chords = harmonyelement["chords"]
-                                import re
-                                chords = re.split(" |\|\n|\t", chords)
-                                for c in chords:
-                                    if c in knownchords[name][staff]:
-                                        if refpitch == destpitch:
-                                            musicelements.append("\\" + self.voicename(name, staff) + \
-                                                                 cleanup_string_for_lilypond(c))
-                                        else:
-                                            musicelements.append("{{ \\transpose {0} {1} {{ {2} }} }}".format(refpitch,
-                                                                 destpitch,
-                                                                 "\\" + self.voicename(name, staff) + \
-                                                                 cleanup_string_for_lilypond(c)))
-                                    elif self.to_be_derived_from_existing(c):  # calculate from previous chord
-                                        cname = cleanup_string_for_lilypond("{0}".format(c))
-                                        vname = self.voicename(name, staff) + cname
-                                        number, accidental, modifier = split_roman_prefix(c)
-                                        if "_" in modifier:
-                                            msplit = modifier.split("_")
-                                            modifier_without_suffix = msplit[1]
-                                            modifier_without_prefix = msplit[0]
-                                        else:
-                                            modifier_without_suffix = modifier
-                                            modifier_without_prefix = modifier
-                                        one_chord = "I" + modifier_without_suffix
-
-                                        if one_chord not in knownchords[name][staff]:
-                                            print("ERROR! Style always needs at least specification of the I chord.")
-                                            print("In case of track {0}, staff {1} we couldn't find it.".format(
-                                                    name, staff))
-                                            print("Bailing out.")
-                                            sys.exit(1)
-
-                                        if one_chord not in knownchords[name][staff] and \
-                                                not modifier_without_prefix.startswith("m") and \
-                                                modifier_without_prefix != "":
-                                            # minor can be calculated from major if needed;
-                                            # other types require explicit hints
-                                            print("ERROR! Cannot find chord {0} in style file.".format(one_chord))
-                                            print("Need it to calculate chord {0} in track {1}, staff {2}.".format(c,
-                                                  name, staff))
-                                            print("Bailing out.")
-                                            sys.exit(2)
-
-                                        elif one_chord not in knownchords[name][staff] and \
-                                                modifier_without_prefix.startswith("m"):
-                                            #
-                                            # e.g. you try to calculat VIm but Im doesn't exist in the style file
-                                            # in that case: calculate VIm from I.
-                                            #
-                                            style_scale = style["specified-relative-to"]["key"]
-                                            style_scale_mode = style["specified-relative-to"]["mode"]
-                                            name_to_constructor = {
-                                                "major": music21.scale.MajorScale,
-                                                "minor": music21.scale.MinorScale
-                                            }
-                                            source_scale = name_to_constructor[style_scale_mode](style_scale)
-                                            sourcepitch = music21.pitch.Pitch(style_scale)
-                                            target_distance = self.scaledegree_distance_from_I(number + accidental)
-                                            target_interval = music21.interval.Interval(target_distance)
-                                            target_pitch = music21.interval.transposePitch(sourcepitch, target_interval)
-                                            target_scale = music21.scale.MinorScale(target_pitch.name)
-                                            fragment = style["tracks"][name]["staves"][staff]["chords"]["I"]
-                                            vl = VoiceLeader()
-                                            l = Lily2Stream()
-                                            s = l.parse(fragment)
-                                            vlmethod = self.voiceleading_method(style, name, staff)
-
-                                            self.transform_note_stream(s, source_scale, target_scale, vl, vlmethod)
-                                            self.transform_chord_stream(s, source_scale, target_scale, vl, vlmethod)
-
-                                            new_fragment = "{ " + l.unparse(
-                                                    s.flat.getElementsByClass(["Note", "Chord", "Rest"])) + " }"
-                                            if refpitch == destpitch:
-                                                musicelements.append("\\" + vname)
-                                            else:
-                                                musicelements.append("{{ \\transpose {0} {1} {{ {2} }} }}".format(
-                                                        refpitch, destpitch, "\\" + vname))
-                                            self.register_chord(name, staff, c, new_fragment, knownchords,
-                                                                chorddefinitions)
-
-                                        elif one_chord in knownchords[name][staff]:
-                                            #
-                                            # e.g. you try to find VIm7 and Im7 exists in the style file
-                                            #
-                                            style_scale = style["specified-relative-to"]["key"]
-                                            style_scale_mode = style["specified-relative-to"]["mode"]
-                                            name_to_constructor = {
-                                                "major": music21.scale.MajorScale,
-                                                "minor": music21.scale.MinorScale
-                                            }
-                                            source_scale = name_to_constructor[style_scale_mode](style_scale)
-                                            sourcepitch = music21.pitch.Pitch(style_scale)
-                                            target_distance = self.scaledegree_distance_from_I(number + accidental)
-                                            target_interval = music21.interval.Interval(target_distance)
-                                            target_pitch = music21.interval.transposePitch(sourcepitch, target_interval)
-                                            target_scale = music21.scale.MajorScale(target_pitch.name)
-                                            if "m" in modifier_without_prefix:
-                                                target_scale = music21.scale.MinorScale(target_pitch.name)
-                                            # start from Im7 to calculate VIm7
-                                            fragment = style["tracks"][name]["staves"][staff]["chords"][one_chord]
-                                            vl = VoiceLeader()
-                                            l = Lily2Stream()
-                                            s = l.parse(fragment)
-                                            vlmethod = self.voiceleading_method(style, name, staff)
-
-                                            self.transform_note_stream(s, source_scale, target_scale, vl, vlmethod)
-                                            self.transform_chord_stream(s, source_scale, target_scale, vl, vlmethod)
-
-                                            new_fragment = "{ " + l.unparse(
-                                                    s.flat.getElementsByClass(["Note", "Chord", "Rest"])) + " }"
-                                            if refpitch == destpitch:
-                                                musicelements.append("\\" + vname)
-                                            else:
-                                                musicelements.append("{{ \\transpose {0} {1} {{ {2} }} }}".format(
-                                                        refpitch, destpitch, "\\" + vname))
-                                            self.register_chord(name, staff, c, new_fragment, knownchords,
-                                                                chorddefinitions)
-                                    else:
-                                        musicelements.append(c)
-
-                            elif "ly" in harmonyelement:
-                                e = harmonyelement["ly"]
-                                if isinstance(e, list):
-                                    for el in e:
-                                        musicelements.append(el)
-                                else:
-                                    musicelements.append(e)
-                            elif "transpose" in harmonyelement:
-                                destpitch = harmonyelement["transpose"]["to"]
-
-                        voice = staff_voice_template.render(voicefragmentname=voicefragmentname,
-                                                            musicelements=musicelements)
-                        h.voicedefinitions.append(voice)
-
         if "tracks" in song:
             for name in song["tracks"]:
-                for staff in song["tracks"][name]["staves"]:
-                    destpitch = refpitch[:]
-                    if "instrumentName" in song["tracks"][name]:
-                        h.instrumentname[name] = song["tracks"][name]["instrumentName"]
-                    else:
-                        h.instrumentname[name] = name
-                    h.sorted_song_tracks.append(name)
-                    voicefragmentname = self.voicefragmentname(name, staff)
-                    h.stafftypes[name].append((song["tracks"][name]["type"], voicefragmentname))
-                    h.staffproperties[voicefragmentname].append(
-                            song["tracks"][name]["staves"][staff]["staffProperties"])
-                    h.hasclef[voicefragmentname] = "treble"
-                    if "clef" in song["tracks"][name]["staves"][staff]:
-                        h.hasclef[voicefragmentname] = style["tracks"][name]["staves"][staff]["clef"]
-                    staff_voice_template = Template(filename=os.path.join(self.rootpath, "ly-templates", "voice.mako"))
-                    musicelements = []
-                    for element in song["tracks"][name]["staves"][staff]["music"]:
-                        if "ly" in element:
-                            lycode = element["ly"].replace("|", "|\n")
-                            if refpitch == destpitch:
-                                musicelements.append(lycode)
-                            else:
-                                musicelements.append(
-                                        "{{\\transpose {0} {1} {{ {2} }} }}".format(refpitch, destpitch, lycode))
-                        elif "transpose" in element:
-                            destpitch = element["transpose"]["to"]
-                    voice = staff_voice_template.render(voicefragmentname=voicefragmentname,
-                                                        musicelements=musicelements)
-                    h.voicedefinitions.append(voice)
+                self.process_track(song, song, refpitch, name, knownchords, chorddefinitions, h)
 
-                    if "lyrics" in song["tracks"][name]["staves"][staff]:
-                        h.haslyrics[voicefragmentname] = True
-                        lyrics = song["tracks"][name]["staves"][staff]["lyrics"]
-                        staff_lyrics_template = Template(
-                                filename=os.path.join(self.rootpath, "ly-templates", "lyrics.mako"))
-                        rendered_lyrics = staff_lyrics_template.render(voicefragmentname=voicefragmentname + "Lyrics",
-                                                                       musicelements=[lyrics.replace("|", "|\n")])
-                        h.voicedefinitions.append(rendered_lyrics)
-                    else:
-                        h.haslyrics[voicefragmentname] = False
+        if "tracks" in style:
+            for name in style["tracks"]:
+                self.process_track(song, style, refpitch, name, knownchords, chorddefinitions, h)
+
         if rhythm is not None and "tracks" in rhythm:
             for name in rhythm["tracks"]:
                 if "instrumentName" in rhythm["tracks"][name]:
@@ -547,6 +353,198 @@ class StyleCompiler(object):
                         h.voicedefinitions.append(voice)
 
         return h
+
+    def process_track(self, song, style, refpitch, name, knownchords, chorddefinitions, h):
+        if "instrumentName" in style["tracks"][name]:
+            h.instrumentname[name] = style["tracks"][name]["instrumentName"]
+        else:
+            h.instrumentname[name] = name
+        h.sorted_style_tracks.append(name)
+        if name in style["tracks"] and "staves" in style["tracks"][name]:
+            for staff in style["tracks"][name]["staves"]:
+                self.process_staff(song, style, refpitch, knownchords, chorddefinitions, staff, name, h)
+
+    def process_staff(self, song, style, refpitch, knownchords, chorddefinitions, staff, name, h):
+        destpitch = refpitch[:]  # reset for each staff
+        voicefragmentname = self.voicefragmentname(name, staff)
+        h.stafftypes[name].append((style["tracks"][name]["type"], voicefragmentname))
+        if "staffProperties" in style["tracks"][name]["staves"][staff]:
+            h.staffproperties[voicefragmentname].append(style["tracks"][name]["staves"][staff]["staffProperties"])
+        h.hasclef[voicefragmentname] = "treble"
+        if "clef" in style["tracks"][name]["staves"][staff]:
+            h.hasclef[voicefragmentname] = style["tracks"][name]["staves"][staff]["clef"]
+        staff_voice_template = Template(filename=os.path.join(self.rootpath,
+                                                              "ly-templates", "voice.mako"))
+        h.haslyrics[voicefragmentname] = False
+        vl = VoiceLeader()
+        self.process_harmony(song, style, refpitch, destpitch, knownchords, chorddefinitions, staff,
+                             name, staff_voice_template, voicefragmentname, h)
+
+        if "lyrics" in style["tracks"][name]["staves"][staff]:
+            h.haslyrics[voicefragmentname] = True
+            lyrics = style["tracks"][name]["staves"][staff]["lyrics"]
+            staff_lyrics_template = Template(
+            filename=os.path.join(self.rootpath, "ly-templates", "lyrics.mako"))
+            rendered_lyrics = staff_lyrics_template.render(voicefragmentname=voicefragmentname + "Lyrics",
+                                                           musicelements=[lyrics.replace("|", "|\n")])
+            h.voicedefinitions.append(rendered_lyrics)
+        else:
+            h.haslyrics[voicefragmentname] = False
+
+    def process_harmony(self, song, style, refpitch, destpitch, knownchords, chorddefinitions, staff, name,
+                        staff_voice_template, voicefragmentname, h):
+        musicelements = []
+        if "music" in style["tracks"][name]["staves"][staff]:
+            for element in style["tracks"][name]["staves"][staff]["music"]:
+                if "ly" in element:
+                    lycode = element["ly"].replace("|", "|\n")
+                    if refpitch == destpitch:
+                        musicelements.append(lycode)
+                    else:
+                        musicelements.append("{{\\transpose {0} {1} {{ {2} }} }}".format(refpitch, destpitch, lycode))
+                elif "transpose" in element:
+                    destpitch = element["transpose"]["to"]
+            voice = staff_voice_template.render(voicefragmentname=voicefragmentname, musicelements=musicelements)
+            h.voicedefinitions.append(voice)
+
+        elif "chords" in style["tracks"][name]["staves"][staff]:
+            for harmonyelement in song["harmony"]:
+                if "chords" in harmonyelement:
+                    chords = harmonyelement["chords"]
+                    import re
+                    chords = re.split(" |\|\n|\t", chords)
+                    for c in chords:
+                        if c in knownchords[name][staff]:
+                            if refpitch == destpitch:
+                                musicelements.append("\\" + self.voicename(name, staff) + \
+                                                     cleanup_string_for_lilypond(c))
+                            else:
+                                musicelements.append("{{ \\transpose {0} {1} {{ {2} }} }}".format(refpitch,
+                                                                                                  destpitch,
+                                                                                                  "\\" + self.voicename(
+                                                                                                      name, staff) + \
+                                                                                                  cleanup_string_for_lilypond(
+                                                                                                      c)))
+                        elif self.to_be_derived_from_existing(c):  # calculate from previous chord
+                            cname = cleanup_string_for_lilypond("{0}".format(c))
+                            vname = self.voicename(name, staff) + cname
+                            number, accidental, modifier = split_roman_prefix(c)
+                            if "_" in modifier:
+                                msplit = modifier.split("_")
+                                modifier_without_suffix = msplit[1]
+                                modifier_without_prefix = msplit[0]
+                            else:
+                                modifier_without_suffix = modifier
+                                modifier_without_prefix = modifier
+                            one_chord = "I" + modifier_without_suffix
+
+                            if one_chord not in knownchords[name][staff]:
+                                print("ERROR! Style always needs at least specification of the I chord.")
+                                print("In case of track {0}, staff {1} we couldn't find it.".format(
+                                        name, staff))
+                                print("Bailing out.")
+                                sys.exit(1)
+
+                            if one_chord not in knownchords[name][staff] and \
+                                    not modifier_without_prefix.startswith("m") and \
+                                            modifier_without_prefix != "":
+                                # minor can be calculated from major if needed;
+                                # other types require explicit hints
+                                print("ERROR! Cannot find chord {0} in style file.".format(one_chord))
+                                print("Need it to calculate chord {0} in track {1}, staff {2}.".format(c,
+                                                                                                       name, staff))
+                                print("Bailing out.")
+                                sys.exit(2)
+
+                            elif one_chord not in knownchords[name][staff] and \
+                                    modifier_without_prefix.startswith("m"):
+                                #
+                                # e.g. you try to calculat VIm but Im doesn't exist in the style file
+                                # in that case: calculate VIm from I.
+                                #
+                                style_scale = style["specified-relative-to"]["key"]
+                                style_scale_mode = style["specified-relative-to"]["mode"]
+                                name_to_constructor = {
+                                    "major": music21.scale.MajorScale,
+                                    "minor": music21.scale.MinorScale
+                                }
+                                source_scale = name_to_constructor[style_scale_mode](style_scale)
+                                sourcepitch = music21.pitch.Pitch(style_scale)
+                                target_distance = self.scaledegree_distance_from_I(number + accidental)
+                                target_interval = music21.interval.Interval(target_distance)
+                                target_pitch = music21.interval.transposePitch(sourcepitch, target_interval)
+                                target_scale = music21.scale.MinorScale(target_pitch.name)
+                                fragment = style["tracks"][name]["staves"][staff]["chords"]["I"]
+                                vl = VoiceLeader()
+                                l = Lily2Stream()
+                                s = l.parse(fragment)
+                                vlmethod = self.voiceleading_method(style, name, staff)
+
+                                self.transform_note_stream(s, source_scale, target_scale, vl, vlmethod)
+                                self.transform_chord_stream(s, source_scale, target_scale, vl, vlmethod)
+
+                                new_fragment = "{ " + l.unparse(
+                                        s.flat.getElementsByClass(["Note", "Chord", "Rest"])) + " }"
+                                if refpitch == destpitch:
+                                    musicelements.append("\\" + vname)
+                                else:
+                                    musicelements.append("{{ \\transpose {0} {1} {{ {2} }} }}".format(
+                                            refpitch, destpitch, "\\" + vname))
+                                self.register_chord(name, staff, c, new_fragment, knownchords,
+                                                    chorddefinitions)
+
+                            elif one_chord in knownchords[name][staff]:
+                                #
+                                # e.g. you try to find VIm7 and Im7 exists in the style file
+                                #
+                                style_scale = style["specified-relative-to"]["key"]
+                                style_scale_mode = style["specified-relative-to"]["mode"]
+                                name_to_constructor = {
+                                    "major": music21.scale.MajorScale,
+                                    "minor": music21.scale.MinorScale
+                                }
+                                source_scale = name_to_constructor[style_scale_mode](style_scale)
+                                sourcepitch = music21.pitch.Pitch(style_scale)
+                                target_distance = self.scaledegree_distance_from_I(number + accidental)
+                                target_interval = music21.interval.Interval(target_distance)
+                                target_pitch = music21.interval.transposePitch(sourcepitch, target_interval)
+                                target_scale = music21.scale.MajorScale(target_pitch.name)
+                                if "m" in modifier_without_prefix:
+                                    target_scale = music21.scale.MinorScale(target_pitch.name)
+                                # start from Im7 to calculate VIm7
+                                fragment = style["tracks"][name]["staves"][staff]["chords"][one_chord]
+                                vl = VoiceLeader()
+                                l = Lily2Stream()
+                                s = l.parse(fragment)
+                                vlmethod = self.voiceleading_method(style, name, staff)
+
+                                self.transform_note_stream(s, source_scale, target_scale, vl, vlmethod)
+                                self.transform_chord_stream(s, source_scale, target_scale, vl, vlmethod)
+
+                                new_fragment = "{ " + l.unparse(
+                                        s.flat.getElementsByClass(["Note", "Chord", "Rest"])) + " }"
+                                if refpitch == destpitch:
+                                    musicelements.append("\\" + vname)
+                                else:
+                                    musicelements.append("{{ \\transpose {0} {1} {{ {2} }} }}".format(
+                                            refpitch, destpitch, "\\" + vname))
+                                self.register_chord(name, staff, c, new_fragment, knownchords,
+                                                    chorddefinitions)
+                        else:
+                            musicelements.append(c)
+
+                elif "ly" in harmonyelement:
+                    e = harmonyelement["ly"]
+                    if isinstance(e, list):
+                        for el in e:
+                            musicelements.append(el)
+                    else:
+                        musicelements.append(e)
+                elif "transpose" in harmonyelement:
+                    destpitch = harmonyelement["transpose"]["to"]
+            voice = staff_voice_template.render(voicefragmentname=voicefragmentname,
+                                                musicelements=musicelements)
+            h.voicedefinitions.append(voice)
 
     def to_be_derived_from_existing(self, c):
         return starts_with_one_of(c.upper(), ["III", "II", "IV", "I", "VII", "VI", "V"])
