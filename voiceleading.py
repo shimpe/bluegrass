@@ -10,9 +10,9 @@ _MODULUS = 12  # size of the octave
 _HALFMODULUS = int(0.5 + _MODULUS / 2.0)
 
 DIRECT_TRANSPOSITION = 0
+SHIIHS_VOICELEADING = 1
 NAIVE_VOICELEADING = 2
 TYMOCZKO_VOICELEADING = 3
-SHIIHS_VOICELEADING = 1
 
 """
 
@@ -379,7 +379,8 @@ class VoiceLeader(object):
                 src2target[p] = src2target_helper[p][0]
         elif reorder_notes == TYMOCZKO_VOICELEADING:
             vl = voicelead(from_fragment, target_pitches, top_n=2)
-            for srcpitch, targetpitch in zip(from_fragment, vl):
+            from itertools import cycle
+            for srcpitch, targetpitch in zip(from_fragment, cycle(vl)):
                 src2target[srcpitch] = targetpitch
         elif reorder_notes == SHIIHS_VOICELEADING:
             ###
