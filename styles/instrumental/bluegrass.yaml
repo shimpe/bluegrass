@@ -10,11 +10,11 @@ style:
       tracks :
           upperbanjo :
               type : "Staff"
-              instrumentName : "banjo I"
+              instrumentName : "\"banjo I\""
               staves :
                   banjo:           
                       staffProperties:
-                          midiInstrument : "banjo"
+                          midiInstrument : "\"banjo\""
                       voiceLeadingMethod : 0
                       chords :
                           I : "{c'16 g' e' c' g' e' c' e'}"
@@ -23,11 +23,11 @@ style:
                           Rest: "{r2}"
           lowerbanjo :
               type : "Staff"
-              instrumentName : "banjo II"
+              instrumentName : "\"banjo II\""
               staves :
                   banjo:
                       staffProperties:
-                          midiInstrument : "banjo"
+                          midiInstrument : "\"banjo\""
                       voiceLeadingMethod : 0
                       chords : 
                           I : "{g'16 e' c'' g' e' c'' g' e'}"
@@ -36,11 +36,11 @@ style:
                           Rest: "{r2}"
           bass :
               type : "Staff"
-              instrumentName : "bass"
+              instrumentName : "\"bass\""
               staves :
                   bass :
                       staffProperties:
-                          midiInstrument: "acoustic bass"
+                          midiInstrument: "\"acoustic bass\""
                       voiceLeadingMethod : 0
                       clef : "bass_8"
                       chords :
@@ -50,11 +50,11 @@ style:
                           Rest: "{r2}"
           piano:
               type : "PianoStaff"
-              instrumentName : "piano"
+              instrumentName : "\"piano\""
               staves :
                   piano-right :
                       staffProperties:
-                          midiInstrument : "acoustic grand"
+                          midiInstrument : "\"acoustic grand\""
                       voiceLeadingMethod : 1
                       chords :
                           I : "{ r8 <g' c'' e''>4 <g' c'' e''>8 }"
@@ -63,7 +63,7 @@ style:
                           Rest : "{r1}"
                   piano-left :
                       staffProperties:
-                          midiInstrument : "acoustic grand"
+                          midiInstrument : "\"acoustic grand\""
                       voiceLeadingMethod : 1
                       clef : "bass"
                       chords :

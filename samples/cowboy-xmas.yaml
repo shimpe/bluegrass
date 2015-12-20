@@ -92,7 +92,7 @@ song:
               staves:
                   tenor:
                       staffProperties:
-                          midiInstrument : "clarinet"
+                          midiInstrument : "\"clarinet\""
                           midiMinimumVolume : "#0.7"
                           midiMaximumVolume : "#0.9"
                       music:

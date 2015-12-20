@@ -11,6 +11,9 @@ from lily2stream import Lily2Stream
 from numberutils import int_to_roman, int_to_text, split_roman_prefix, starts_with_one_of
 from voiceleading import VoiceLeader, SHIIHS_VOICELEADING
 
+HARMONY = 1
+MELODY = 2
+PERCUSSION = 3
 
 def merge_dicts(x, y):
     """
@@ -198,9 +201,12 @@ class StyleCompiler(object):
                         lyricsname = voicename + "Lyrics"
                     all_staffprops = harvestedproperties.staffproperties[voicename][:]
                     all_staffprops.append({'instrumentName': harvestedproperties.instrumentname[staffname]})
+                    staffoverr = harvestedproperties.staffoverrides[voicename] if voicename in \
+                                 harvestedproperties.staffoverrides else []
                     staffdefinition = stafftemplate.render(
                             staffname=staffname + "Staff",
                             staffproperties=all_staffprops,
+                            staffoverrides=staffoverr,
                             voicefragmentname=voicename,
                             clef=harvestedproperties.hasclef[voicename],
                             lyricsname=lyricsname)
@@ -216,9 +222,12 @@ class StyleCompiler(object):
                     lyricsname[voicename] = None
                     if harvestedproperties.haslyrics[voicename]:
                         lyricsname[voicename] = voicename + "Lyrics"
+                staffoverr = harvestedproperties.staffoverrides[staffname] if staffname in \
+                             harvestedproperties.staffoverrides else []
                 staffdefinition = stafftemplate.render(
                         staffname=staffname + "PianoStaff",
                         staffproperties=[{'instrumentName': harvestedproperties.instrumentname[staffname]}],
+                        staffoverrides=staffoverr,
                         voicenames=sorted_voices,
                         voiceproperties=harvestedproperties.staffproperties,
                         clef=harvestedproperties.hasclef,
@@ -299,77 +308,36 @@ class StyleCompiler(object):
 
         if "tracks" in song:
             for name in song["tracks"]:
-                self.process_track(song, song, refpitch, name, knownchords, chorddefinitions, h)
+                self.process_track(MELODY, song, song, refpitch, name, knownchords, chorddefinitions, knownpatterns, h)
 
         if "tracks" in style:
             for name in style["tracks"]:
-                self.process_track(song, style, refpitch, name, knownchords, chorddefinitions, h)
+                self.process_track(HARMONY, song, style, refpitch, name, knownchords, chorddefinitions, knownpatterns, h)
 
         if rhythm is not None and "tracks" in rhythm:
             for name in rhythm["tracks"]:
-                if "instrumentName" in rhythm["tracks"][name]:
-                    h.instrumentname[name] = rhythm["tracks"][name]["instrumentName"]
-                else:
-                    h.instrumentname[name] = name
-                h.sorted_style_tracks.append(name)
-                for staff in rhythm["tracks"][name]["staves"]:
-                    voicefragmentname = self.voicefragmentname(name, staff)
-                    h.stafftypes[name].append((rhythm["tracks"][name]["type"], voicefragmentname))
-                    if "staffProperties" in rhythm["tracks"][name]["staves"][staff]:
-                        h.staffproperties[voicefragmentname].append(
-                                rhythm["tracks"][name]["staves"][staff]["staffProperties"])
-                    if "staffOverrides" in rhythm["tracks"][name]["staves"][staff]:
-                        h.staffoverrides[voicefragmentname].append(
-                                rhythm["tracks"][name]["staves"][staff]["staffOverrides"])
-                    musicelements = []
-                    h.hasclef[voicefragmentname] = "percussion"
-                    if "clef" in rhythm["tracks"][name]["staves"][staff]:
-                        h.hasclef[voicefragmentname] = rhythm["tracks"][name]["staves"][staff]["clef"]
-                    staff_voice_template = Template(filename=os.path.join(self.rootpath, "ly-templates", "voice.mako"))
-                    h.haslyrics[voicefragmentname] = False
-                    if "percussion" in song:
-                        for harmonyelement in song["percussion"]:
-                            if "patterns" in harmonyelement:
-                                patterns = harmonyelement["patterns"]
-                                import re
-                                patterns = re.split(" |\|\n|\t", patterns)
-                                for p in patterns:
-                                    if p in knownpatterns[name][staff]:
-                                        musicelements.append("\\" + self.voicename(name, staff) + \
-                                                             cleanup_string_for_lilypond(p))
-                                    else:
-                                        musicelements.append(p)
-
-                            elif "ly" in harmonyelement:
-                                e = harmonyelement["ly"]
-                                if isinstance(e, list):
-                                    for el in e:
-                                        musicelements.append(el)
-                                else:
-                                    musicelements.append(e)
-
-                        voice = staff_voice_template.render(voicefragmentname=voicefragmentname,
-                                                            musicelements=musicelements)
-                        h.voicedefinitions.append(voice)
+                self.process_track(PERCUSSION, song, rhythm, refpitch, name, knownchords, chorddefinitions, knownpatterns, h)
 
         return h
 
-    def process_track(self, song, style, refpitch, name, knownchords, chorddefinitions, h):
-        if "instrumentName" in style["tracks"][name]:
+    def process_track(self, harmonytype, song, style, refpitch, name, knownchords, chorddefinitions, knownpatterns, h):
+        if "tracks" in style and name in style["tracks"] and "instrumentName" in style["tracks"][name]:
             h.instrumentname[name] = style["tracks"][name]["instrumentName"]
         else:
             h.instrumentname[name] = name
         h.sorted_style_tracks.append(name)
         if name in style["tracks"] and "staves" in style["tracks"][name]:
             for staff in style["tracks"][name]["staves"]:
-                self.process_staff(song, style, refpitch, knownchords, chorddefinitions, staff, name, h)
+                self.process_staff(harmonytype, song, style, refpitch, knownchords, chorddefinitions, knownpatterns, staff, name, h)
 
-    def process_staff(self, song, style, refpitch, knownchords, chorddefinitions, staff, name, h):
+    def process_staff(self, harmonytype, song, style, refpitch, knownchords, chorddefinitions, knownpatterns, staff, name, h):
         destpitch = refpitch[:]  # reset for each staff
         voicefragmentname = self.voicefragmentname(name, staff)
         h.stafftypes[name].append((style["tracks"][name]["type"], voicefragmentname))
         if "staffProperties" in style["tracks"][name]["staves"][staff]:
             h.staffproperties[voicefragmentname].append(style["tracks"][name]["staves"][staff]["staffProperties"])
+        if "staffOverrides" in style["tracks"][name]["staves"][staff]:
+            h.staffoverrides[voicefragmentname].append(style["tracks"][name]["staves"][staff]["staffOverrides"])
         h.hasclef[voicefragmentname] = "treble"
         if "clef" in style["tracks"][name]["staves"][staff]:
             h.hasclef[voicefragmentname] = style["tracks"][name]["staves"][staff]["clef"]
@@ -377,7 +345,7 @@ class StyleCompiler(object):
                                                               "ly-templates", "voice.mako"))
         h.haslyrics[voicefragmentname] = False
         vl = VoiceLeader()
-        self.process_harmony(song, style, refpitch, destpitch, knownchords, chorddefinitions, staff,
+        self.process_harmony(harmonytype, song, style, refpitch, destpitch, knownchords, chorddefinitions, knownpatterns, staff,
                              name, staff_voice_template, voicefragmentname, h)
 
         if "lyrics" in style["tracks"][name]["staves"][staff]:
@@ -391,10 +359,10 @@ class StyleCompiler(object):
         else:
             h.haslyrics[voicefragmentname] = False
 
-    def process_harmony(self, song, style, refpitch, destpitch, knownchords, chorddefinitions, staff, name,
+    def process_harmony(self, harmonytype, song, style, refpitch, destpitch, knownchords, chorddefinitions, knownpatterns, staff, name,
                         staff_voice_template, voicefragmentname, h):
         musicelements = []
-        if "music" in style["tracks"][name]["staves"][staff]:
+        if harmonytype == MELODY and "music" in style["tracks"][name]["staves"][staff]:
             for element in style["tracks"][name]["staves"][staff]["music"]:
                 if "ly" in element:
                     lycode = element["ly"].replace("|", "|\n")
@@ -407,7 +375,32 @@ class StyleCompiler(object):
             voice = staff_voice_template.render(voicefragmentname=voicefragmentname, musicelements=musicelements)
             h.voicedefinitions.append(voice)
 
-        elif "chords" in style["tracks"][name]["staves"][staff]:
+        if harmonytype == PERCUSSION and "percussion" in song:
+            for harmonyelement in song["percussion"]:
+                if "patterns" in harmonyelement:
+                    patterns = harmonyelement["patterns"]
+                    import re
+                    patterns = re.split(" |\|\n|\t", patterns)
+                    for p in patterns:
+                        if p in knownpatterns[name][staff]:
+                            musicelements.append("\\" + self.voicename(name, staff) + \
+                                                             cleanup_string_for_lilypond(p))
+                        else:
+                            musicelements.append(p)
+
+                elif "ly" in harmonyelement:
+                    e = harmonyelement["ly"]
+                    if isinstance(e, list):
+                        for el in e:
+                            musicelements.append(el)
+                    else:
+                        musicelements.append(e)
+
+            voice = staff_voice_template.render(voicefragmentname=voicefragmentname,
+                                                musicelements=musicelements)
+            h.voicedefinitions.append(voice)
+
+        if harmonytype == HARMONY and "chords" in style["tracks"][name]["staves"][staff]:
             for harmonyelement in song["harmony"]:
                 if "chords" in harmonyelement:
                     chords = harmonyelement["chords"]
