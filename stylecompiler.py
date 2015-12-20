@@ -14,6 +14,7 @@ from voiceleading import VoiceLeader, SHIIHS_VOICELEADING
 HARMONY = 1
 MELODY = 2
 PERCUSSION = 3
+SPLITREGEX = " |\||\n|\t"
 
 def merge_dicts(x, y):
     """
@@ -274,7 +275,7 @@ class StyleCompiler(object):
     def calculate_patterns(self, rhythm):
         patterndefinitions = {}
         knownpatterns = defaultdict(lambda: defaultdict(set))
-        if rhythm  is not None and "tracks" in rhythm:
+        if rhythm is not None and "tracks" in rhythm:
             for name in rhythm["tracks"]:
                 if name in patterndefinitions:
                     print("*** WARNING: drum track with name {0} is specified multiple times".format(name))
@@ -380,7 +381,7 @@ class StyleCompiler(object):
                 if "patterns" in harmonyelement:
                     patterns = harmonyelement["patterns"]
                     import re
-                    patterns = re.split(" |\|\n|\t", patterns)
+                    patterns = re.split(SPLITREGEX, patterns)
                     for p in patterns:
                         if p in knownpatterns[name][staff]:
                             musicelements.append("\\" + self.voicename(name, staff) + \
@@ -405,7 +406,7 @@ class StyleCompiler(object):
                 if "chords" in harmonyelement:
                     chords = harmonyelement["chords"]
                     import re
-                    chords = re.split(" |\|\n|\t", chords)
+                    chords = re.split(SPLITREGEX, chords)
                     for c in chords:
                         if c in knownchords[name][staff]:
                             if refpitch == destpitch:
