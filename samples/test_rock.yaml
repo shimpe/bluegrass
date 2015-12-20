@@ -1,0 +1,17 @@
+song:
+      rhythm: "rock"
+      header:
+          title : "test"
+          subtitle : "generated using BlueGrass"
+          composer : "shiihs"
+      global:
+          key : "c \\major"
+      midi:
+          tempo: 144
+      percussion:
+          - patterns:
+              >
+                  Rock1 Rock2 Rock3 Rock4 Rock5
+                  Rock6 Rock6 Rock6 Rock6  
+                  SlowRock1 SlowRock1 SlowRock1 SlowRock1
+

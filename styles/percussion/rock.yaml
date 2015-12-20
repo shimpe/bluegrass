@@ -1,0 +1,87 @@
+# bluegrass style
+# (C) 2015 stefaan himpe
+style:
+      name : 'rock'
+      global:
+          time : "4/4"
+      tracks :
+          drums :
+              type : "DrumStaff"
+              instrumentName : "drums"
+              staves :
+                  drums:
+                      staffProperties:
+                          midiMinimumVolume : "#0.7"
+                          midiMaximumVolume:  "#0.9"
+                      patterns : 
+                           Rock1 :
+                                >
+                                    {\drummode {
+                                        <<
+                                            \new DrumVoice {
+                                                \voiceOne hhc8 hhc hhc hhc hhc hhc hhc hhc }
+                                            \new DrumVoice {
+                                                \voiceTwo bd8 r8 sn r8 bd r8 sn r8 }
+                                        >>}
+                                    }
+                           Rock2 :
+                                >
+                                    {\drummode {
+                                        <<
+                                            \new DrumVoice {
+                                                \voiceOne hhc8 hhc hhc hhc hhc hhc hhc hhc }
+                                            \new DrumVoice {
+                                                \voiceTwo bd8 r8 <<bd sn>> r8 bd r8 <<bd sn>> r8 }
+                                        >>}
+                                    }
+                           Rock3 :
+                                >
+                                    {\drummode {
+                                        <<
+                                            \new DrumVoice {
+                                                \voiceOne hhc8 hhc hhc hhc hhc hhc hhc hhc }
+                                            \new DrumVoice {
+                                                \voiceTwo bd8 r8 sn r8 bd bd sn r8 }
+                                        >>}
+                                    }
+                           Rock4:
+                                >
+                                    {\drummode {
+                                        <<
+                                            \new DrumVoice {
+                                                \voiceOne hhc8 hhc hhc hhc hhc hhc hhc hhc }
+                                            \new DrumVoice {
+                                                \voiceTwo bd8 r8 sn bd bd r8 sn r8 }
+                                        >>}
+                                    }
+                           Rock5:
+                                >
+                                    {\drummode {
+                                        <<
+                                            \new DrumVoice {
+                                                \voiceOne hhc8 hhc hhc hhc hhc hhc hhc hhc }
+                                            \new DrumVoice {
+                                                \voiceTwo bd8 r8 sn bd r8 bd sn r8 }
+                                        >>}
+                                    }
+                           Rock6:
+                                >
+                                    {\drummode {
+                                        <<
+                                            \new DrumVoice {
+                                                \voiceOne hhc8 hhc hhc hhc16 hhc
+                                                          hhc8 hhc r hho }
+                                            \new DrumVoice {
+                                                \voiceTwo bd8 bd sn4 bd8. bd16 sn4}
+                                        >>}
+                                    }
+                           SlowRock1:
+                                >
+                                    {\drummode {
+                                        <<
+                                            \new DrumVoice {
+                                                \voiceOne hhc8 hhc <<sn hhc>> hhc }
+                                            \new DrumVoice {
+                                                \voiceTwo bd4. bd8 }
+                                        >>}
+                                    }
