@@ -16,6 +16,71 @@ MELODY = 2
 PERCUSSION = 3
 SPLITREGEX = " |\||\n|\t"
 
+import cProfile
+import tempfile
+import pstats
+def profile(sort='cumulative', lines=50, strip_dirs=False):
+    """A decorator which profiles a callable.
+    Example usage:
+
+    >>> @profile
+        def factorial(n):
+            n = abs(int(n))
+            if n < 1:
+                    n = 1
+            x = 1
+            for i in range(1, n + 1):
+                    x = i * x
+            return x
+    ...
+    >>> factorial(5)
+    Thu Jul 15 20:58:21 2010    /tmp/tmpIDejr5
+
+             4 function calls in 0.000 CPU seconds
+
+       Ordered by: internal time, call count
+
+       ncalls  tottime  percall  cumtime  percall filename:lineno(function)
+            1    0.000    0.000    0.000    0.000 profiler.py:120(factorial)
+            1    0.000    0.000    0.000    0.000 {range}
+            1    0.000    0.000    0.000    0.000 {abs}
+
+    120
+    >>>
+    """
+    def outer(fun):
+        def inner(*args, **kwargs):
+            file = tempfile.NamedTemporaryFile()
+            prof = cProfile.Profile()
+            try:
+                ret = prof.runcall(fun, *args, **kwargs)
+            except:
+                file.close()
+                raise
+
+            prof.dump_stats(file.name)
+            stats = pstats.Stats(file.name)
+            if strip_dirs:
+                stats.strip_dirs()
+            if isinstance(sort, (tuple, list)):
+                stats.sort_stats(*sort)
+            else:
+                stats.sort_stats(sort)
+            stats.print_stats(lines)
+
+            file.close()
+            return ret
+        return inner
+
+    # in case this is defined as "@profile" instead of "@profile()"
+    if hasattr(sort, '__call__'):
+        fun = sort
+        sort = 'cumulative'
+        outer = outer(fun)
+    return outer
+
+
+
 def merge_dicts(x, y):
     """
     Given two dicts, merge them into a new dict as a shallow copy.
@@ -100,6 +165,7 @@ class StyleCompiler(object):
     def lyricsfragmentname(self, trackname, staffname):
         return self.voicefragmentname(trackname, staffname) + "Lyrics"
 
+    #@profile
     def compile(self):
         # read song and style specs
         song = self.load_song(self.options.inputfile[0])
@@ -360,17 +426,15 @@ class StyleCompiler(object):
         else:
             h.haslyrics[voicefragmentname] = False
 
-    def process_harmony(self, harmonytype, song, style, refpitch, destpitch, knownchords, chorddefinitions, knownpatterns, staff, name,
-                        staff_voice_template, voicefragmentname, h):
+    def process_harmony(self, harmonytype, song, style, refpitch, destpitch, knownchords, chorddefinitions,
+                        knownpatterns, staff, name, staff_voice_template, voicefragmentname, h):
         musicelements = []
         if harmonytype == MELODY and "music" in style["tracks"][name]["staves"][staff]:
             for element in style["tracks"][name]["staves"][staff]["music"]:
-                if "ly" in element:
-                    lycode = element["ly"].replace("|", "|\n")
-                    if refpitch == destpitch:
-                        musicelements.append(lycode)
-                    else:
-                        musicelements.append("{{\\transpose {0} {1} {{ {2} }} }}".format(refpitch, destpitch, lycode))
+                if "notes" in element:
+                    self.insert_transposable_lilypondcode(refpitch, destpitch, element, musicelements)
+                elif "ly" in element:
+                    self.insert_raw_lilypondcode(element["ly"], musicelements)
                 elif "transpose" in element:
                     destpitch = element["transpose"]["to"]
             voice = staff_voice_template.render(voicefragmentname=voicefragmentname, musicelements=musicelements)
@@ -383,19 +447,9 @@ class StyleCompiler(object):
                     import re
                     patterns = re.split(SPLITREGEX, patterns)
                     for p in patterns:
-                        if p in knownpatterns[name][staff]:
-                            musicelements.append("\\" + self.voicename(name, staff) + \
-                                                             cleanup_string_for_lilypond(p))
-                        else:
-                            musicelements.append(p)
-
+                        self.insert_nontransposable_pattern(p, knownpatterns, staff, name, musicelements)
                 elif "ly" in harmonyelement:
-                    e = harmonyelement["ly"]
-                    if isinstance(e, list):
-                        for el in e:
-                            musicelements.append(el)
-                    else:
-                        musicelements.append(e)
+                    self.insert_raw_lilypondcode(harmonyelement, musicelements)
 
             voice = staff_voice_template.render(voicefragmentname=voicefragmentname,
                                                 musicelements=musicelements)
@@ -409,16 +463,7 @@ class StyleCompiler(object):
                     chords = re.split(SPLITREGEX, chords)
                     for c in chords:
                         if c in knownchords[name][staff]:
-                            if refpitch == destpitch:
-                                musicelements.append("\\" + self.voicename(name, staff) + \
-                                                     cleanup_string_for_lilypond(c))
-                            else:
-                                musicelements.append("{{ \\transpose {0} {1} {{ {2} }} }}".format(refpitch,
-                                                                                                  destpitch,
-                                                                                                  "\\" + self.voicename(
-                                                                                                      name, staff) + \
-                                                                                                  cleanup_string_for_lilypond(
-                                                                                                      c)))
+                            self.insert_transposable_pattern(c, refpitch, destpitch, staff, name, musicelements)
                         elif self.to_be_derived_from_existing(c):  # calculate from previous chord
                             cname = cleanup_string_for_lilypond("{0}".format(c))
                             vname = self.voicename(name, staff) + cname
@@ -529,17 +574,46 @@ class StyleCompiler(object):
                             musicelements.append(c)
 
                 elif "ly" in harmonyelement:
-                    e = harmonyelement["ly"]
-                    if isinstance(e, list):
-                        for el in e:
-                            musicelements.append(el)
-                    else:
-                        musicelements.append(e)
+                    self.insert_raw_lilypondcode(harmonyelement, musicelements)
                 elif "transpose" in harmonyelement:
                     destpitch = harmonyelement["transpose"]["to"]
             voice = staff_voice_template.render(voicefragmentname=voicefragmentname,
                                                 musicelements=musicelements)
             h.voicedefinitions.append(voice)
+
+    def insert_transposable_pattern(self, c, refpitch, destpitch, staff, name, musicelements):
+        if refpitch == destpitch:
+            musicelements.append("\\" + self.voicename(name, staff) + \
+                                 cleanup_string_for_lilypond(c))
+        else:
+            musicelements.append("{{ \\transpose {0} {1} {{ {2} }} }}".format(refpitch,
+                                                                              destpitch,
+                                                                              "\\" + self.voicename(
+                                                                                      name, staff) + \
+                                                                              cleanup_string_for_lilypond(
+                                                                                      c)))
+
+    def insert_nontransposable_pattern(self, p, knownpatterns, staff, name, musicelements):
+        if p in knownpatterns[name][staff]:
+            musicelements.append("\\" + self.voicename(name, staff) + \
+                                 cleanup_string_for_lilypond(p))
+        else:
+            musicelements.append(p)
+
+    def insert_transposable_lilypondcode(self, refpitch, destpitch, element, musicelements):
+        lycode = element["notes"].replace("|", "|\n")
+        if refpitch == destpitch:
+            musicelements.append(lycode)
+        else:
+            musicelements.append("{{\\transpose {0} {1} {{ {2} }} }}".format(refpitch, destpitch, lycode))
+
+    def insert_raw_lilypondcode(self, harmonyelement, musicelements):
+        e = harmonyelement["ly"]
+        if isinstance(e, list):
+            for el in e:
+                musicelements.append(el)
+        else:
+            musicelements.append(e)
 
     def to_be_derived_from_existing(self, c):
         return starts_with_one_of(c.upper(), ["III", "II", "IV", "I", "VII", "VI", "V"])

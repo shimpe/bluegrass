@@ -98,7 +98,7 @@ song:
                       music:
                           - transpose:
                               to: "c"
-                          - ly:
+                          - notes:
                               >
                                   \global
                                   \dynamicUp r1 |
@@ -132,7 +132,7 @@ song:
                                   <c'' e''>1 |
                                   r1 |
                                   \key d \major
-                          - ly:
+                          - notes:
                               >
                                   r2. d''4 fis''8 a'' a'' g'' g''8 fis''4.~  |
                                   fis''2. d''4 |
