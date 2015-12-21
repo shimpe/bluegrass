@@ -11,11 +11,19 @@ song:
       harmony:
         - transpose:
             to : "c"
+        - mute-track :
+            track : "bass"
+        - mute-staff :
+            staff : "piano-right"
         - chords :
             >
                   I I |
                   I I |
                   I I |
+        - unmute-track :
+            track: "bass"
+        - chords :
+            >
                   I I |
                   IV IV |
                   I I |
@@ -25,6 +33,10 @@ song:
                   I I |
                   I I |
                   V V |
+        - unmute-staff :
+            staff: "piano-right"
+        - chords :
+            >
                   I I |
                   IV IV |
                   V V |
@@ -41,7 +53,7 @@ song:
                   V V |
                   I I |
                   I StepUp |
-        - ly : "\\key d \\major"
+                  \key d \major
         - transpose:
             to : "d"
         - chords :
@@ -51,9 +63,16 @@ song:
                   I I |
 
       percussion :
+        - mute-staff:
+            staff : "timbales"
         - patterns:
+            >
                   Ia Ib
                   Ic Id
+        - unmute-staff :
+            staff : "timbales"
+        - patterns:
+            >
                   Ia Ib
                   Ic Id
                   Ia Ib

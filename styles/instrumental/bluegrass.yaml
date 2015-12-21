@@ -60,7 +60,7 @@ style:
                           I : "{ r8 <g' c'' e''>4 <g' c'' e''>8 }"
                           I7 : "{ r8 <g' bes' e''>4 <g' bes' e''>8 }"
                           StepUp : "{ r8 <g' c'' e''>4 <g' c'' e''>8 }"
-                          Rest : "{r1}"
+                          Rest : "{r2}"
                   piano-left :
                       staffProperties:
                           midiInstrument : "\"acoustic grand\""
@@ -70,4 +70,4 @@ style:
                           I : "{c8 c'4 g8 }"
                           I7 : " {c8 c'4 g8 }"
                           StepUp : "{c4 cis4}"
-                          Rest : "{r1}"
+                          Rest : "{r2}"

@@ -21,7 +21,7 @@ style:
                           Ia7: "{c'8 < g' bes' e''> < g' bes' e''> g8 <g' bes' e''> <g' bes' e''>}"
                           Ib : "{c'8 < g' c'' e'' > < g' c'' e''> g8 <g' c'' e''>16 ~ < g' c'' f''> < g' c'' e''>8}"
                           Ib7: "{c'8 < g' bes' e''> < g' bes' e''> g8 <g' bes' e''>16 ~ <g' bes' f''>  <g' bes' e''>8}"
-                          Rest: "{r2}"
+                          Rest: "{r2.}"
           bass :
               type : "Staff"
               instrumentName : "bass"
@@ -36,5 +36,5 @@ style:
                           Ia7: "{ c,4. g,,4. }"
                           Ib : "{ c,4. g,,4. }"
                           Ib7: "{ c,4. g,,4. }"
-                          Rest: "{r2}"
+                          Rest: "{r2.}"
                                     

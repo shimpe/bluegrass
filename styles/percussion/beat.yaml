@@ -22,6 +22,7 @@ style:
                           Ib : "{ \\drummode { timl8 ssh r timh } }"
                           Ic : "{ \\drummode { r4 ssh8 timl } }"
                           Id : "{ \\drummode { r4 cb8 cb } }"
+                          Rest: "{ r2 }"
           drums :
               type : "DrumStaff"
               instrumentName : "drums"
@@ -71,3 +72,4 @@ style:
                                         \voiceTwo toml8 toml bd tomfh16 tomfh }
                                   >> }
                                 }
+                          Rest: "{ r2 }"

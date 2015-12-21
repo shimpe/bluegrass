@@ -19,7 +19,7 @@ style:
                       chords :
                           I : "{c'8 < g' c'' e'' > < g' c'' e''> g8 <g' c'' e''>8 < g' c'' e''>}"
                           I7: "{c'8 < g' bes' e''> < g' bes' e''> g8 <g' bes' e''> <g' bes' e''>}"
-                          Rest: "{r2}"
+                          Rest: "{r2.}"
           bass :
               type : "Staff"
               instrumentName : "bass"
@@ -32,5 +32,5 @@ style:
                       chords :
                           I : "{ c,4. g,,4. }"
                           I7: "{ c,4. g,,4. }"
-                          Rest: "{r2}"
+                          Rest: "{r2.}"
                                     
