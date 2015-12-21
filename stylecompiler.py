@@ -432,12 +432,13 @@ class StyleCompiler(object):
                                 modifier_without_prefix = modifier
                             one_chord = "I" + modifier_without_suffix
 
-                            if one_chord not in knownchords[name][staff]:
-                                print("ERROR! Style always needs at least specification of the I chord.")
-                                print("In case of track {0}, staff {1} we couldn't find it.".format(
-                                        name, staff))
-                                print("Bailing out.")
-                                sys.exit(1)
+                            # if one_chord not in knownchords[name][staff] and not \
+                            #     (one_chord.endswith("m") and one_chord[:-1] in knownchords[name][staff]):
+                            #     print("ERROR! Style always needs at least specification of the I chord.")
+                            #     print("In case of track {0}, staff {1} we couldn't find it.".format(
+                            #             name, staff))
+                            #     print("Bailing out.")
+                            #     sys.exit(1)
 
                             if one_chord not in knownchords[name][staff] and \
                                     not modifier_without_prefix.startswith("m") and \

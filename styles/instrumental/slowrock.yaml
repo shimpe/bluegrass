@@ -1,0 +1,78 @@
+# slowrock style
+# (C) 2015 stefaan himpe
+style:
+      name : 'slowrock'
+      global:
+          time : "4/4"
+      specified-relative-to :
+          key : "c"
+          mode : "major"
+      tracks :
+          bass :
+              type : "Staff"
+              instrumentName : "\"bass\""
+              staves :
+                  bass :
+                      staffProperties:
+                          midiInstrument: "\"acoustic bass\""
+                      voiceLeadingMethod : 0
+                      clef : "bass_8"
+                      chords :
+                          I : "{ c,4 c,}"
+                          I7: "{ c,4 c,}"
+                          StepUp : "{ c,4 cis,4 }"
+                          Rest: "{r2}"
+          piano:
+              type : "PianoStaff"
+              instrumentName : "\"piano\""
+              staves :
+                  piano-right :
+                      staffProperties:
+                          midiInstrument : "\"acoustic grand\""
+                      voiceLeadingMethod : 0
+                      chords :
+                          I :
+                              >
+                                  {
+                                      { <g' c'' e''>8 <g' c'' e''> }
+                                      { <g' c'' e''>8 <g' c'' e''> }
+                                  }
+                          I7 :
+                              >
+                                  {
+                                      { <g' bes' e''>8 <g' c'' e''>8  }
+                                      { <g' bes' e''>8 <g' c'' e''>8  }
+                                  }
+                          StepUp :
+                              >
+                                  {
+                                      { <g' c'' e''>8 <g' c'' e''>8 }
+                                      { <g' c'' e''>8 <g' c'' e''>8 }
+                                  }
+                          Rest : "{r2}"
+                  piano-left :
+                      staffProperties:
+                          midiInstrument : "\"acoustic grand\""
+                      voiceLeadingMethod : 1
+                      clef : "bass"
+                      chords :
+                          I :
+                              >
+                                  {
+                                      \tuplet 3/2 {c8 e g}
+                                      \tuplet 3/2 {c'8 g e}
+                                  }
+                          I7 :
+                              >
+                                  {
+                                      \tuplet 3/2 {c8 e g}
+                                      \tuplet 3/2 {c'8 g e}
+                                  }
+
+                          StepUp :
+                              >
+                                  {
+                                    \tuplet 3/2 {c8 e g}
+                                    \tuplet 3/2 {cis'8 g e}
+                                  }
+                          Rest : "{r2}"

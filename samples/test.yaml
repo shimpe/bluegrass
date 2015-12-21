@@ -1,5 +1,5 @@
 song:
-      style : "bluegrass"
+      style : "slowrock"
       rhythm: "beat"
       header:
           title : "test"
@@ -8,10 +8,10 @@ song:
       global:
           key : "c \\major"
       midi:
-          tempo: 144
+          tempo: 80
       harmony:
           - transpose:
-              to : "c"
+              to : "e"
           - chords :
               >
                   I I       | IV IV     | I I       | V V7      |
