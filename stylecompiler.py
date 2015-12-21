@@ -375,15 +375,18 @@ class StyleCompiler(object):
 
         if "tracks" in song:
             for name in song["tracks"]:
-                self.process_track(MELODY, song, song, refpitch, name, knownchords, chorddefinitions, knownpatterns, h)
+                self.process_track(MELODY, song, song, refpitch, name, knownchords,
+                                   chorddefinitions, knownpatterns, h)
 
         if "tracks" in style:
             for name in style["tracks"]:
-                self.process_track(HARMONY, song, style, refpitch, name, knownchords, chorddefinitions, knownpatterns, h)
+                self.process_track(HARMONY, song, style, refpitch, name, knownchords,
+                                   chorddefinitions, knownpatterns, h)
 
         if rhythm is not None and "tracks" in rhythm:
             for name in rhythm["tracks"]:
-                self.process_track(PERCUSSION, song, rhythm, refpitch, name, knownchords, chorddefinitions, knownpatterns, h)
+                self.process_track(PERCUSSION, song, rhythm, refpitch, name, knownchords,
+                                   chorddefinitions, knownpatterns, h)
 
         return h
 
@@ -395,9 +398,11 @@ class StyleCompiler(object):
         h.sorted_style_tracks.append(name)
         if name in style["tracks"] and "staves" in style["tracks"][name]:
             for staff in style["tracks"][name]["staves"]:
-                self.process_staff(harmonytype, song, style, refpitch, knownchords, chorddefinitions, knownpatterns, staff, name, h)
+                self.process_staff(harmonytype, song, style, refpitch, knownchords, chorddefinitions,
+                                   knownpatterns, staff, name, h)
 
-    def process_staff(self, harmonytype, song, style, refpitch, knownchords, chorddefinitions, knownpatterns, staff, name, h):
+    def process_staff(self, harmonytype, song, style, refpitch, knownchords, chorddefinitions, knownpatterns,
+                      staff, name, h):
         destpitch = refpitch[:]  # reset for each staff
         voicefragmentname = self.voicefragmentname(name, staff)
         h.stafftypes[name].append((style["tracks"][name]["type"], voicefragmentname))
@@ -412,8 +417,8 @@ class StyleCompiler(object):
                                                               "ly-templates", "voice.mako"))
         h.haslyrics[voicefragmentname] = False
         vl = VoiceLeader()
-        self.process_harmony(harmonytype, song, style, refpitch, destpitch, knownchords, chorddefinitions, knownpatterns, staff,
-                             name, staff_voice_template, voicefragmentname, h)
+        self.process_harmony(harmonytype, song, style, refpitch, destpitch, knownchords, chorddefinitions,
+                             knownpatterns, staff, name, staff_voice_template, voicefragmentname, h)
 
         if "lyrics" in style["tracks"][name]["staves"][staff]:
             h.haslyrics[voicefragmentname] = True
@@ -432,7 +437,8 @@ class StyleCompiler(object):
         if harmonytype == MELODY and "music" in style["tracks"][name]["staves"][staff]:
             for element in style["tracks"][name]["staves"][staff]["music"]:
                 if "notes" in element:
-                    self.insert_transposable_lilypondcode(refpitch, destpitch, element, musicelements)
+                    lycode = element["notes"].replace("|", "|\n")
+                    self.insert_transposable_lilypondcode(refpitch, destpitch, lycode, musicelements)
                 elif "ly" in element:
                     self.insert_raw_lilypondcode(element["ly"], musicelements)
                 elif "transpose" in element:
@@ -525,11 +531,7 @@ class StyleCompiler(object):
 
                                 new_fragment = "{ " + l.unparse(
                                         s.flat.getElementsByClass(["Note", "Chord", "Rest"])) + " }"
-                                if refpitch == destpitch:
-                                    musicelements.append("\\" + vname)
-                                else:
-                                    musicelements.append("{{ \\transpose {0} {1} {{ {2} }} }}".format(
-                                            refpitch, destpitch, "\\" + vname))
+                                self.insert_transposable_voicename(refpitch, destpitch, vname, musicelements)
                                 self.register_chord(name, staff, c, new_fragment, knownchords,
                                                     chorddefinitions)
 
@@ -563,11 +565,7 @@ class StyleCompiler(object):
 
                                 new_fragment = "{ " + l.unparse(
                                         s.flat.getElementsByClass(["Note", "Chord", "Rest"])) + " }"
-                                if refpitch == destpitch:
-                                    musicelements.append("\\" + vname)
-                                else:
-                                    musicelements.append("{{ \\transpose {0} {1} {{ {2} }} }}".format(
-                                            refpitch, destpitch, "\\" + vname))
+                                self.insert_transposable_voicename(refpitch, destpitch, vname, musicelements)
                                 self.register_chord(name, staff, c, new_fragment, knownchords,
                                                     chorddefinitions)
                         else:
@@ -580,6 +578,13 @@ class StyleCompiler(object):
             voice = staff_voice_template.render(voicefragmentname=voicefragmentname,
                                                 musicelements=musicelements)
             h.voicedefinitions.append(voice)
+
+    def insert_transposable_voicename(self, refpitch, destpitch, vname, musicelements):
+        if refpitch == destpitch:
+            musicelements.append("\\" + vname)
+        else:
+            musicelements.append("{{ \\transpose {0} {1} {{ {2} }} }}".format(
+                    refpitch, destpitch, "\\" + vname))
 
     def insert_transposable_pattern(self, c, refpitch, destpitch, staff, name, musicelements):
         if refpitch == destpitch:
@@ -600,8 +605,7 @@ class StyleCompiler(object):
         else:
             musicelements.append(p)
 
-    def insert_transposable_lilypondcode(self, refpitch, destpitch, element, musicelements):
-        lycode = element["notes"].replace("|", "|\n")
+    def insert_transposable_lilypondcode(self, refpitch, destpitch, lycode, musicelements):
         if refpitch == destpitch:
             musicelements.append(lycode)
         else:
