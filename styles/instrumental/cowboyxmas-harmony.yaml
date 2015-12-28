@@ -1,0 +1,118 @@
+# bluegrass style
+# (C) 2015 stefaan himpe
+style:
+      name : 'bluegrass'
+      global:
+          time : "4/4"
+      specified-relative-to :
+          key : "c"
+          mode : "major"
+      tracks :
+          upperbanjo :
+              type : "Staff"
+              instrumentName : "\"banjo I\""
+              staves :
+                  banjo:           
+                      staffProperties:
+                          midiInstrument : "\"banjo\""
+                      voiceLeadingMethod : 0
+                      chords :
+                          I : "{c'16 g' e' c' g' e' c' e'}"
+                          I7: "{bes'16 g' e' bes' g' e' bes' e'}"
+                          Ia: "{ c'32 g' e' c'  c'32 g' e' c'  c'32 g' e' c'  c'32 g' e' c'  }"
+                          I7a : "{ bes'32 g' e' c'  bes'32 g' e' c'  bes'32 g' e' c'  bes'32 g' e' c'  }"
+                          Ib : "{c'8 g' e' c'}"
+                          I7b : "{bes8 g' e' c'}"
+                          Ica : "{r2}"
+                          I7ca : "{r2}"
+                          Icb : "{r2}"
+                          I7cb : "{r2}"
+                          StepUp : "{c'16 g' e' c' g' e' c' e'}"
+                          Rest: "{r2}"
+                          Iend : "{ g'16 a' c'' a'8 g'16 e' c' | g'8 a' c''4 }"
+          lowerbanjo :
+              type : "Staff"
+              instrumentName : "\"banjo II\""
+              staves :
+                  banjo:
+                      staffProperties:
+                          midiInstrument : "\"banjo\""
+                      voiceLeadingMethod : 0
+                      chords : 
+                          I : "{g'16 e' c'' g' e' c'' g' e'}"
+                          I7: "{g'16 e' bes' g' e' bes' g' e'}"
+                          Ia: "{ g'32 e' c' e'  g'32 e' c' e'  g'32 e' c' e'  g'32 e' c' e'   }"
+                          I7a: " { g'32 e' bes' e'  g'32 e' bes' e'  g'32 e' bes' e'  g'32 e' bes' e'   }  "
+                          Ib : "{g'8 e' c'' g'}"
+                          I7b: "{g'8 e' bes' g'}"
+                          Ica : "{r2}"
+                          I7ca : "{r2}"
+                          Icb : "{r2}"
+                          I7cb : "{r2}"
+                          StepUp : "{g'16 e' c'' g' e' c'' g' e'}"
+                          Rest: "{r2}"
+                          Iend : "{ e'16 f' g' f'8 e'16 d' c' | e'8 d'8 c'4 }"
+          bass :
+              type : "Staff"
+              instrumentName : "\"bass\""
+              staves :
+                  bass :
+                      staffProperties:
+                          midiInstrument: "\"acoustic bass\""
+                      voiceLeadingMethod : 0
+                      clef : "bass_8"
+                      chords :
+                          I : "{ c,4 g,,}"
+                          I7: "{ c,4 g,,}"
+                          Ia: "{ c,8 c8 c, c  }"
+                          I7a: "{ c,8 c8 c, c  }"
+                          Ib: "{ c,2  }"
+                          I7b: "{ c,2 }"
+                          Ica : "{ c,4. c,8}"
+                          I7ca : "{ c,4. c,8}"
+                          Icb : "{ c2 }"
+                          I7cb : "{ c2 }"
+                          StepUp : "{ c,4 cis,4 }"
+                          Rest: "{r2}"
+                          Iend: " { c,1 } "
+          piano:
+              type : "PianoStaff"
+              instrumentName : "\"piano\""
+              staves :
+                  piano-right :
+                      staffProperties:
+                          midiInstrument : "\"acoustic grand\""
+                      voiceLeadingMethod : 1
+                      chords :
+                          I : "{ r8 <g' c'' e''>4 <g' c'' e''>8 }"
+                          I7 : "{ r8 <g' bes' e''>4 <g' bes' e''>8 }"
+                          Ia : "{ \\times 2/3{ c'8 g' c'  }  \\times 2/3{ c'8 g' c'  } }"
+                          I7a : "{ \\times 2/3{ c'8 g' bes'  }  \\times 2/3{ c'8 g' bes'  } }"
+                          Ib : "{ \\times 2/3{ c'4 g' c'  } }"
+                          I7b : "{ \\times 2/3{ c'4 g' bes'  } }"
+                          Ica : "{ <e' g' c''>4. <e' g' c''>8 }"
+                          I7ca : "{ <e' g' bes'>4. <e' g' bes'>8 }"
+                          Icb : "{ <e' g' c''>2 }"
+                          I7cb : "{ <e' g' bes'>2 }"
+                          StepUp : "{ r8 <g' c'' e''>4 <g' c'' e''>8 }"
+                          Rest : "{r2}"
+                          Iend : "{ <e' g' c''>1 }"
+                  piano-left :
+                      staffProperties:
+                          midiInstrument : "\"acoustic grand\""
+                      voiceLeadingMethod : 1
+                      clef : "bass"
+                      chords :
+                          I : "{c8 c'4 g8 }"
+                          I7 : " {c8 c'4 g8 }"
+                          Ia: " {c16 c' c c' c16 c' c c'}"
+                          I7a: " {c16 c' c c' c16 c' c c'}"
+                          Ib : "{c2}"
+                          I7b : "{c2}"
+                          Ica : "{c2 }"
+                          I7ca: "{c2 }"
+                          Icb : "{c'2}"
+                          I7cb: "{c'2}"
+                          StepUp : "{c4 cis4}"
+                          Rest : "{r2}"
+                          Iend : "{ c1 }"

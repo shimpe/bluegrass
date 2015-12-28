@@ -1,0 +1,57 @@
+# waltz style
+# (C) 2015 stefaan himpe
+style:
+      name : 'rock'
+      global:
+          time : "3/4"
+      tracks :
+          drums :
+              type : "DrumStaff"
+              instrumentName : "drums"
+              staves :
+                  drums:
+                      staffProperties:
+                          midiMinimumVolume : "#0.7"
+                          midiMaximumVolume:  "#0.9"
+                      patterns : 
+                           Waltz1 :
+                                >
+                                    {\drummode {
+                                        <<
+                                            \new DrumVoice {
+                                                \voiceOne hhc8 hhc hhc hhc hhc hhc  }
+                                            \new DrumVoice {
+                                                \voiceTwo bd8 r8 sn r8 sn r8 }
+                                        >>}
+                                    }
+                           WaltzFast:
+                                >
+                                    {\drummode {
+                                        <<
+                                            \new DrumVoice {
+                                                \voiceOne hhc8 hhc hhc hhc hhc hhc  }
+                                            \new DrumVoice {
+                                                \voiceTwo bd8 sn sn bd8 sn sn  }
+                                        >>}
+                                    }
+                           WaltzFill:
+                                >
+                                    {\drummode {
+                                        <<
+                                            \new DrumVoice {
+                                                \voiceOne hhc8 hhc hhc hhc hhc hhc  }
+                                            \new DrumVoice {
+                                                \voiceTwo bd8 sn sn sn16 sn16 sn16 sn16 sn16 sn16 }
+                                        >>}
+                                    }
+                           WaltzEnd:
+                                >
+                                    {\drummode {
+                                        <<
+                                            \new DrumVoice {
+                                                \voiceOne hho4 r r }
+                                            \new DrumVoice {
+                                                \voiceTwo bd4 r r}
+                                        >>}
+                                    }
+                           Rest : "{ r2 }"

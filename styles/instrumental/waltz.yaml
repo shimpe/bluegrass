@@ -18,6 +18,7 @@ style:
                       voiceLeadingMethod : 0
                       chords :
                           I : "{c'8 < g' c'' e'' > < g' c'' e''> g8 <g' c'' e''>8 < g' c'' e''>}"
+                          Iend : "{c'2.}"
                           I7: "{c'8 < g' bes' e''> < g' bes' e''> g8 <g' bes' e''> <g' bes' e''>}"
                           Rest: "{r2.}"
           bass :
@@ -31,6 +32,7 @@ style:
                       clef : "bass_8"
                       chords :
                           I : "{ c,4. g,,4. }"
+                          Iend : "{c,2.}"
                           I7: "{ c,4. g,,4. }"
                           Rest: "{r2.}"
                                     

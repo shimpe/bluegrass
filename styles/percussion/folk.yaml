@@ -1,0 +1,37 @@
+# folk style
+# (C) 2015 stefaan himpe
+style:
+      name : 'folk'
+      global:
+          time : "4/4"
+      tracks :
+          drums :
+              type : "DrumStaff"
+              instrumentName : "drums"
+              staves :
+                  drums:
+                      staffProperties:
+                          midiMinimumVolume : "#0.7"
+                          midiMaximumVolume:  "#0.9"
+                      patterns :
+                          Folk1:
+                                >
+                                    {   \drummode
+                                        {
+                                            <<
+                                                \new DrumVoice
+                                                {
+                                                    \voiceOne sn16 sn sn sn sn16 sn sn sn sn16 sn sn sn sn16 sn sn sn
+                                                }
+                                                \new DrumVoice
+                                                {
+                                                    \voiceTwo  bd4 bd bd bd
+                                                }
+                                                \new DrumVoice
+                                                {
+                                                    \voiceThree  r8 hhc8 r8 hhc8 r8 hhc8 r8 hhc8
+                                                }
+                                            >>
+                                        }
+                                    }
+                          Rest: "{ r2 }"

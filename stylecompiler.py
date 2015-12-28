@@ -19,6 +19,8 @@ SPLITREGEX = " |\||\n|\t"
 import cProfile
 import tempfile
 import pstats
+
+
 def profile(sort='cumulative', lines=50, strip_dirs=False):
     """A decorator which profiles a callable.
     Example usage:
@@ -48,6 +50,7 @@ def profile(sort='cumulative', lines=50, strip_dirs=False):
     120
     >>>
     """
+
     def outer(fun):
         def inner(*args, **kwargs):
             file = tempfile.NamedTemporaryFile()
@@ -70,6 +73,7 @@ def profile(sort='cumulative', lines=50, strip_dirs=False):
 
             file.close()
             return ret
+
         return inner
 
     # in case this is defined as "@profile" instead of "@profile()"
@@ -78,7 +82,6 @@ def profile(sort='cumulative', lines=50, strip_dirs=False):
         sort = 'cumulative'
         outer = outer(fun)
     return outer
-
 
 
 def merge_dicts(x, y):
@@ -132,6 +135,7 @@ class StyleCompiler(object):
             print("*** Loaded style file ", fname)
         except:
             print("*** Error: couldn't load style file {0}. {1}".format(fname, sys.exc_info()[0]))
+            sys.exit(3)
         return style
 
     @staticmethod
@@ -146,6 +150,7 @@ class StyleCompiler(object):
             print("*** Loaded song file ", fname)
         except Exception:
             print("*** Error: couldn't load song file {0}. {1}".format(fname, sys.exc_info()[0]))
+            sys.exit(4)
         return song
 
     @staticmethod
@@ -167,7 +172,7 @@ class StyleCompiler(object):
     def lyricsfragmentname(self, trackname, staffname):
         return self.voicefragmentname(trackname, staffname) + "Lyrics"
 
-    #@profile
+    # @profile
     def compile(self):
         # read song and style specs
         song = self.load_song(self.options.inputfile[0])
@@ -209,7 +214,7 @@ class StyleCompiler(object):
         if self.options.outputfile:
             filename = os.path.abspath(self.options.outputfile[0])
             if os.path.isfile(filename) and not self.options.force:
-                print("*** REFUSING TO OVERWRITE EXISTING OUTPUT FILE {0}! QUIT. " +\
+                print("*** REFUSING TO OVERWRITE EXISTING OUTPUT FILE {0}! QUIT. " + \
                       "(use --force to overwrite existing files).".format(self.options.outputfile))
                 sys.exit(1)
             elif os.path.isfile(filename) and self.options.force:
@@ -271,7 +276,7 @@ class StyleCompiler(object):
                     all_staffprops = harvestedproperties.staffproperties[voicename][:]
                     all_staffprops.append({'instrumentName': harvestedproperties.instrumentname[staffname]})
                     staffoverr = harvestedproperties.staffoverrides[voicename] if voicename in \
-                                 harvestedproperties.staffoverrides else []
+                                                                                  harvestedproperties.staffoverrides else []
                     staffdefinition = stafftemplate.render(
                             staffname=staffname + "Staff",
                             staffproperties=all_staffprops,
@@ -292,7 +297,7 @@ class StyleCompiler(object):
                     if harvestedproperties.haslyrics[voicename]:
                         lyricsname[voicename] = voicename + "Lyrics"
                 staffoverr = harvestedproperties.staffoverrides[staffname] if staffname in \
-                             harvestedproperties.staffoverrides else []
+                                                                              harvestedproperties.staffoverrides else []
                 staffdefinition = stafftemplate.render(
                         staffname=staffname + "PianoStaff",
                         staffproperties=[{'instrumentName': harvestedproperties.instrumentname[staffname]}],
@@ -308,9 +313,9 @@ class StyleCompiler(object):
                 for voice in harvestedproperties.stafftypes[staffname]:
                     voicename = voice[1]
                     staffprops = harvestedproperties.staffproperties[voicename] if voicename in \
-                                 harvestedproperties.staffproperties else []
+                                                                                   harvestedproperties.staffproperties else []
                     staffoverr = harvestedproperties.staffoverrides[voicename] if voicename in \
-                                 harvestedproperties.staffoverrides else []
+                                                                                  harvestedproperties.staffoverrides else []
                     stafftemplate = Template(filename=os.path.join(self.rootpath, "ly-templates", "DrumStaff.mako"))
                     staffdefinition = stafftemplate.render(
                             staffname=staffname + "DrumStaff",
@@ -426,7 +431,7 @@ class StyleCompiler(object):
             h.haslyrics[voicefragmentname] = True
             lyrics = style["tracks"][name]["staves"][staff]["lyrics"]
             staff_lyrics_template = Template(
-            filename=os.path.join(self.rootpath, "ly-templates", "lyrics.mako"))
+                    filename=os.path.join(self.rootpath, "ly-templates", "lyrics.mako"))
             rendered_lyrics = staff_lyrics_template.render(voicefragmentname=voicefragmentname + "Lyrics",
                                                            musicelements=[lyrics.replace("|", "|\n")])
             h.voicedefinitions.append(rendered_lyrics)
@@ -453,7 +458,7 @@ class StyleCompiler(object):
                 if "patterns" in harmonyelement:
                     patterns = harmonyelement["patterns"]
                     import re
-                    patterns = ( el for el in re.split(SPLITREGEX, patterns) if el ) # cut out empty entries
+                    patterns = (el for el in re.split(SPLITREGEX, patterns) if el)  # cut out empty entries
                     for p in patterns:
                         if name not in self.muted_tracks and staff not in self.muted_staves:
                             self.insert_nontransposable_pattern(p, knownpatterns, staff, name, musicelements)
@@ -475,7 +480,6 @@ class StyleCompiler(object):
                     trackname = harmonyelement["unmute-track"]["track"].strip()
                     self.muted_tracks.remove(trackname)
 
-
             voice = staff_voice_template.render(voicefragmentname=voicefragmentname,
                                                 musicelements=musicelements)
             h.voicedefinitions.append(voice)
@@ -485,7 +489,7 @@ class StyleCompiler(object):
                 if "chords" in harmonyelement:
                     chords = harmonyelement["chords"]
                     import re
-                    chords = ( el for el in re.split(SPLITREGEX, chords) if el ) # cut out empty entries
+                    chords = (el for el in re.split(SPLITREGEX, chords) if el)  # cut out empty entries
                     for c in chords:
                         if name not in self.muted_tracks and staff not in self.muted_staves:
                             if c in knownchords[name][staff]:
@@ -550,7 +554,7 @@ class StyleCompiler(object):
                                     self.transform_chord_stream(s, source_scale, target_scale, vl, vlmethod)
 
                                     new_fragment = "{ " + l.unparse(
-                                            s.flat.getElementsByClass(["Note", "Chord", "Rest"])) + " }"
+                                            s.flat.getElementsByClass(["Note", "Chord", "Rest"]).stream()) + " }"
                                     self.insert_transposable_voicename(refpitch, destpitch, vname, musicelements)
                                     self.register_chord(name, staff, c, new_fragment, knownchords,
                                                         chorddefinitions)
@@ -584,7 +588,7 @@ class StyleCompiler(object):
                                     self.transform_chord_stream(s, source_scale, target_scale, vl, vlmethod)
 
                                     new_fragment = "{ " + l.unparse(
-                                            s.flat.getElementsByClass(["Note", "Chord", "Rest"])) + " }"
+                                            s.flat.getElementsByClass(["Note", "Chord", "Rest"]).stream()) + " }"
                                     self.insert_transposable_voicename(refpitch, destpitch, vname, musicelements)
                                     self.register_chord(name, staff, c, new_fragment, knownchords,
                                                         chorddefinitions)
@@ -707,7 +711,7 @@ class StyleCompiler(object):
         return d[("I", degree)] if ("I", degree) in d else 0
 
     def transform_chord_stream(self, s, source_scale, target_scale, vl, vlmethod):
-        chord_stream = s.flat.getElementsByClass(["Chord"])
+        chord_stream = s.flat.getElementsByClass(["Chord"]).stream()
         if chord_stream:
             list_of_chordpitches = []
             for cd in chord_stream:
@@ -723,7 +727,7 @@ class StyleCompiler(object):
                 cs.pitches = list_of_chordpitches[p]
 
     def transform_note_stream(self, s, source_scale, target_scale, vl, vlmethod):
-        note_stream = s.flat.getElementsByClass(["Note"])
+        note_stream = s.flat.getElementsByClass(["Note"]).stream()
         if note_stream:
             pitches = [n.pitch for n in note_stream]
             if pitches:
@@ -737,4 +741,3 @@ class StyleCompiler(object):
         if "voiceLeadingMethod" in style["tracks"][name]["staves"][staff]:
             vlmethod = style["tracks"][name]["staves"][staff]["voiceLeadingMethod"]
         return vlmethod
-

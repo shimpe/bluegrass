@@ -1,0 +1,738 @@
+song:
+      style : "cowboyxmas-harmony"
+      rhythm: "rock"
+      header:
+          title : "Merry XMas Veggie Cowboy"
+          subtitle: "Generated with BlueGrass https://github.com/shimpe/bluegrass"
+          composer : "shiihs"
+      global:
+          key : "c \\major"
+      midi:
+          tempo: 144
+      harmony:
+        - transpose:
+            to : "c"
+        - chords :
+            >
+                  %%intro
+                  I I |
+                  %%for
+                  I I |
+                  %%yearsiyearnedforlovelovelove
+                  I I |
+                  %%a
+                  I I |
+                  %%girlwaswhati
+                  IV IV |
+                  %%needi
+                  I I |
+                  %%dreamedforhertolivewith
+                  I I |
+                  %%me
+                  I I |
+                  %%ineededherwith
+                  V V |
+                  %%speed
+                  I I |
+                  %%i
+                  I I |
+                  %%builtmyselfthis
+                  V V |
+                  %%snowgirlmost
+                  I I |
+                  %%gorgeousgirlon
+                  IV IV |
+                  %%earthtwas
+                  V V |
+                  %%onachristmas
+                  V V |
+                  %%morningthat
+                  I I |
+                  %%iarrangedher
+                  V V |
+                  %%birthyippeeya
+                  I I |
+                  %%yoyippeeya
+                  IV IV |
+                  %%yaythis
+                  I I |
+                  %%isthecowboy
+                  V V |
+                  %%way
+                  I I |
+                  %%yippeeyayayyippeeya
+                  IV IV |
+                  %%yolets
+                  I I |
+                  %%singofhoho
+                  V V |
+                  %%ho
+                  I I |
+                  I StepUp |
+                  \key d \major
+        - transpose:
+            to : "d"
+        - chords :
+            >
+                  I I |
+                  %%i
+                  I I |
+                  %%gaveherquitethecarrot
+                  I I |
+                  I I |
+                  %%someleekstolaceher
+                  IV I |
+                  %%shirt
+                  I I |
+                  %%tounderlineherdeepdarkeyes
+                  I I |
+                  %%isquirtedinsomedirt
+                  V V7 |
+                  %%yippeeya
+                  I I |
+                  %%yoyippeeya
+                  IV IV |
+                  %%yaythis
+                  I I |
+                  %%isthecowboy
+                  V V |
+                  %%wayyippeeya
+                  I I |
+                  %%yayyippeeya
+                  IV IV |
+                  %%yolets
+                  I I |
+                  %%singofhoho
+                  V V |
+                  %%hobut
+                  I I |
+                  %%asIstoodout
+                  I7_b I7_b |
+                  %%sidealoneI
+                  IV_b IV_b |
+                  %%feltImissedher
+                  IVm_b IVm_b |
+                  %%soI
+                  I_b I_b |
+                  %%wantedherundermy
+                  I7_b I7_b |
+                  %%mistletoeand
+                  IV_b IV_b |
+                  %%singofhoho
+                  IVm_b IVm_b |
+                  %%hoThe
+                  V_a V7_a |
+                  %%christmasspirits
+                  I_ca I_cb |
+                  %%cametomeandi
+                  I_ca I_cb |
+                  %%lethercomein
+                  V_ca I_cb |
+                  %%shefeltso
+                  I_ca I_cb |
+                  %%coldyetmademefeel
+                  I_ca I_cb |
+                  %%hotitfeltlikea
+                  I_ca IV_cb |
+                  %%sinbutitwasawin
+                  I_ca V_cb |
+                  %%windis
+                  I_ca I_cb |
+                  %%asterstruckwhen
+                  I7_b I7_b |
+                  %%overnight |
+                  IV_b IV_b |
+                  %%thegirlhaddisap
+                  IVm_b IVm_b |
+                  %%pearedshe
+                  I_b I_b |
+                  %%silentlyhad
+                  I7_b I7_b |
+                  %%leftmybed
+                  IV_b IV_b |
+                  %%andleftit |
+                  IVm_b IVm_b |
+                  %%wetwetwetyet
+                  V_b V_b |
+                  %%nevereverythingis
+                  I I |
+                  %%lostand
+                  I I |
+                  %%alsointhis
+                  IV IV |
+                  %%caseshe
+                  I I |
+                  %%lefthercarrotinmybed
+                  I I |
+                  %%to
+                  I I |
+                  %%getherwiththe
+                  V V7 |
+                  %%lacethat
+                  I I |
+                  %%momentwheni
+                  I7 I7 |
+                  %%realizedthe
+                  IV IV  |
+                  %%girlwasntmy
+                  IVm IVm |
+                  %%thingI
+                  I I |
+                  %%usedthecarrot
+                  I7 I7 |
+                  %%otherwiseand
+                  IV IV |
+                  %%boydidjoyit
+                  IVm IVm |
+                  %%bring
+                  V V |
+                  %%andboydid
+                  V V |
+                  %%joyitbring
+                  V V7 |
+                  %%soheresapieceof
+                  I I |
+                  %%goodadvice
+                  I I |
+                  %%wheneveryoufeel
+                  IV IV |
+                  %%low...
+                  I I |
+                  %%gotossyourselfa
+                  I I |
+                  %%saladsoup
+                  I I |
+                  %%withcarrotsleaksand
+                  V V |
+                  %%snowyipp
+                  I I |
+                  %%yoyippeeya
+                  IV IV |
+                  %%yaythis
+                  I I |
+                  %%isthecowboy
+                  V V |
+                  %%wayyippeeya
+                  I I |
+                  %%yayyippeeya
+                  IV IV |
+                  %%yolets
+                  I I |
+                  %%singofhoho
+                  V V |
+                  %%hobut
+                  I I |
+                  %%
+                  Iend
+
+
+      percussion :
+        - patterns:
+            >
+                  Rock1
+                  %%for
+                  Rock1
+                  %%yearsIyearned
+                  Rock1
+                  %%forlovelovelove
+                  Rock1
+                  %%a
+                  Rock1
+                  %%girlwaswhati
+                  Rock1
+                  %%needi
+                  Rock1
+                  %%dreamedforhertolivewith
+                  Rock1
+                  %%me
+                  Rock1
+                  %%ineededherwith
+                  Rock1
+                  %%speed
+                  Rock1
+                  %%i
+                  Rock1
+                  %%builtmyselfthissnowgirl
+                  Rock1
+                  %%mostgorgeousgirlon
+                  Rock1
+                  %%earthtwas
+                  Rock1
+                  %%onachristmas
+                  Rock1
+                  %%morningthat
+                  Rock1
+                  %%iarrangedher
+                  Rock1
+                  %%birthyippeeya
+                  Rock1
+                  %%yoyippee
+                  Rock1
+                  %%yayaythis
+                  Rock1
+                  %%isthecowboy
+                  Rock1
+                  %%way
+                  Rock1
+                  %%yippeeyayay
+                  Rock1
+                  %yippeeya
+                  Rock1
+                  %yolets
+                  Rock1
+                  %singofhohoho
+                  Rock1
+                  Fill1
+                  Rock1
+                  %%i
+                  Rock1
+                  %%igaveherquitethecarrot
+                  Rock1
+                  %%someleekstolaceher
+                  Rock1
+                  %%shirt
+                  Rock1
+                  Rock1
+                  %%tounderlineherdeepdarkeyes
+                  Rock1
+                  %%isquirtedinsomedirt
+                  Rock1
+                  %%yippeeya
+                  Rock1
+                  %%yoyippeeya
+                  Rock1
+                  %%yaythis
+                  Rock1
+                  %%isthecowboy
+                  Rock1
+                  %%wayyippeeya
+                  Rock1
+                  %%yayyippeeya
+                  Rock1
+                  %%yolets
+                  Rock1
+                  %%singofhoho
+                  Rock1
+                  %%hobut
+                  Rest
+                  Rest
+                  %%asshestoodout
+                  Rest
+                  Rest
+                  %%sidealonei
+                  Rest
+                  Rest
+                  %%feltimissedher
+                  Rest
+                  Rest
+                  %%soI
+                  Rest
+                  Rest
+                  %%wantherundermy
+                  Rest
+                  Rest
+                  %%mistletoeand
+                  Rest
+                  Rest
+                  %%dothehoho
+                  Rest
+                  Rest
+                  %%hothe
+                  Rest
+                  Rest
+                  %%christmasspirit
+                  SlowerRock1
+                  %%cametomeandI
+                  SlowerRock1
+                  %%madehercomein
+                  SlowerRock1
+                  %%shefeltso
+                  SlowerRock1
+                  %%coldyetmademe
+                  SlowerRock1
+                  %%hotitfeltlikea
+                  SlowerRock1
+                  %%sinbutitwasawin
+                  SlowerRock1
+                  %%windis
+                  SlowRock1
+                  SlowRock1
+                  %%astertruckwhen
+                  SlowRock1
+                  SlowRock1
+                  %%overnightthe
+                  SlowRock1
+                  SlowRock1
+                  %%girlhaddisap
+                  SlowRock1
+                  SlowRock1
+                  %%pearedshe
+                  SlowRock1
+                  SlowRock1
+                  %%silentlyhad
+                  SlowRock1
+                  SlowRock1
+                  %%leftmybedand
+                  SlowRock1
+                  SlowRock1
+                  %%leftitwetwet
+                  Fill1
+                  %%wetyet
+                  Rock1
+                  %%nevereverythingislost
+                  Rock1
+                  %%and
+                  Rock1
+                  %%alsointhis
+                  Rock1
+                  %%caseshe
+                  Rock1
+                  %%lefthercarrotinmybed
+                  Rock1
+                  %%to
+                  Rock1
+                  %%getherwiththe
+                  Rock1
+                  %%lacethat
+                  Rock1
+                  %%momentwhenI
+                  Rock1
+                  %%realizedthe
+                  Rock1
+                  %%girlwasntmy
+                  Rock1
+                  %%thingI
+                  Rock1
+                  %%usedthecarrot
+                  Rock1
+                  %%otherwiseand
+                  Rock1
+                  %%boydidjoyit
+                  Rock1
+                  %%bringand
+                  Rock1
+                  %%boydidjoyit
+                  Rock1
+                  %%bringso
+                  Rock1
+                  %%heresapieceofgoodadvice
+                  Rock1
+                  %%when
+                  Rock1
+                  %%everyoufeel
+                  Rock1
+                  %%lowgo
+                  Rock1
+                  %%tossyourselfasaladbar
+                  Rock1
+                  %%with
+                  Rock1
+                  %%carrotsleeksand
+                  Rock1
+                  %%snowyippeeya
+                  Rock1
+                  %%yoyippeeya
+                  Rock1
+                  %%yaythis
+                  Rock1
+                  %%isthecowboy
+                  Rock1
+                  %%wayyippeeya
+                  Rock1
+                  %%yayyippeeya
+                  Rock1
+                  %%yolets
+                  Rock1
+                  %%feellikewowwow
+                  Rock1
+                  %%wow
+                  Rock1
+                  RockEnd
+                  Rest
+
+      tracks:
+          tenor:
+              type : "Staff"
+              instrumentName : "singer"
+              staves:
+                  tenor:
+                      staffProperties:
+                          midiInstrument : "\"clarinet\""
+                          midiMinimumVolume : "#0.7"
+                          midiMaximumVolume : "#0.9"
+                      music:
+                          - transpose:
+                              to: "c"
+                          - notes:
+                              >
+                                  \global
+                                  \dynamicUp r1 |
+                                  r2 c''2 |
+                                  e''8 g''8 g''8 a''8 e''8 d''8 c''4~ |
+                                  c''2. c''4 |
+                                  c''4 c''4 c''4 a' |
+                                  g'2 c''2 |
+                                  e''8 g''8 g''8 a''8 e''8 d''8 c''4~ |
+                                  c''2. c''4 |
+                                  g'4. g'8 a'4 b'4 |
+                                  c''1 |
+                                  r2. c''4 |
+
+                                  d''4 d'' d'' d'' |
+                                  e''4 c''2 c''4  |
+                                  f''4 f'' f'' fis'' |
+                                  g''2. d''4 |
+
+                                  g''4 g'' g'' f'' |
+                                  e''4 c''2 c''4 |
+                                  g'4. g'8 a'4 b'4 |
+                                  c''2. \times 2/3 { c''8 c'' c''}  |
+                                  <f''a''>2. \times 2/3 { <f'' a''>8 <f'' a''> <e'' g''>}  |
+                                  <c'' e''>2. <c'' e''>4 |
+                                  <g' g''>4 <g' g''>4 <a' fis''>4 <b' f''>4 |
+                                  <c'' e''>2. \times 2/3 { <c'' e''>8 <c'' e''> <c'' e''> }  |
+                                  <f'' a''>2. \times 2/3 { <f'' a''>8 <f'' a''> <e'' g''>}  |
+                                  <c'' e''>2. <c'' g''>4 |
+                                  <g' b''>4 <g' g''>4 <a' fis''>4 <b' f''>4 |
+                                  <c'' e''>1 |
+                                  r1 |
+                                  \key d \major
+                          - notes:
+                              >
+                                  r1 |
+                                  r2. d''4 |
+                                  fis''8 a'' a'' g'' g''8 fis''4.~  |
+                                  fis''2. d''4 |
+                                  g''8 g''8 d''8 e''8 fis''2~ |
+                                  fis''4. d''8 fis''8 a''8 a''8 b''8 |
+                                  fis''8 e''8 d''4 ~ d''4. d''8 |
+                                  a'4 a'4 b'4 cis''4 |
+                                  d''2. \times 2/3{ d''8 d''8 d''8 } |
+                                  <g''b''>2. \times 2/3 { <g'' b''>8 <g'' b''> <fis'' a''>}  |
+                                  <d'' fis''>2. <d'' fis''>4 |
+                                  <a' a''>4 <a' a''>4 <b' gis''>4 <cis'' g''>4 |
+                                  <d'' fis''>2. \times 2/3 { <d'' fis''>8 <d'' fis''> <d'' fis''> }  |
+                                  <g'' b''>2. \times 2/3 { <g'' b''>8 <g'' b''> <fis'' a''>}  |
+                                  <d'' fis''>2. <d'' a''>4 |
+                                  <a' cis'''>4 <a' a''>4 <b' gis''>4 <cis'' g''>4 |
+                                  <d'' fis''>2. d''4 |
+
+                                  a''4 a''4 a''4 b''4 |
+                                  a''4 g''4 g''4 d''4 |
+                                  g''4 g''4 a''4 g''4|
+                                  fis''2. d''4 |
+                                  a''4 a''4 a''4 b''4 |
+                                  a''4 g''4 g''4 g''4 |
+                                  g''4 g''4 a''4 g''4|
+                                  a''2. a''4 |
+
+                                  d''4. d''8 d''4 e''4 |
+                                  fis''4 fis''4 fis''4 fis''8 fis''|
+                                  g''8 fis''8 g''4 fis''2~ |
+                                  fis''4 d''4 d''4 e''4 |
+                                  fis''4 fis''4 fis''4 fis''4 |
+                                  fis''4 fis''4 g''8 fis'' g''4 |
+                                  fis''4 fis''8 fis''8 e''8 d''8 e''4 |
+                                  d''2 r4 d''4 |
+
+                                  a''4 a''4 a''4 b''4 |
+                                  a''4 g''4 g''4 d''4 |
+                                  g''4 g''4 a''4 g''4|
+                                  fis''2. d''4 |
+                                  a''4 a''4 a''4 b''4 |
+                                  a''4 g''4 g''4 g''4 |
+                                  g''4 g''4 a''4 g''4|
+                                  a''2. d''4 |
+
+                                  fis''8 a''8 a''8 b''8 fis''8 e'' d''4 ~ |
+                                  d''2. ~ d''8 d''8 |
+                                  d''4 d''4 d''4 b'4 |
+                                  a'2. r8 d''8 |
+                                  fis''8 a''8 a''8 b''8 fis''8 e'' d''4 ~ |
+                                  d''2. ~ d''8 d''8 |
+                                  a'4 a' b' cis'' |
+                                  d''2. r8 d''8 |
+                                  fis''4 a'' a''4 b'' |
+                                  a'' g'' g'' d'' |
+                                  g''4 g'' a'' g'' |
+                                  fis''2. d''4 |
+                                  a''4 a''4 a''4 b''4 |
+                                  a''4 g''4 g''4 d''4 |
+                                  g''4 g''4 a''4 g''4 |
+                                  a''2. a''4 |
+                                  <a' cis''>4 <a' cis''>4 <a' c''>4 <gis' b'>4 |
+                                  <g' a'>2. d''4 |
+                                  fis''8 a''8 a''8 b'' fis''8 e''8 d''4 ~ |
+                                  d''2. d''4 |
+                                  d'' d'' d'' b'4 |
+                                  a'2. ~ a'8 d''8 |
+                                  fis''8 a'' a'' b'' fis'' e'' d''4~ |
+                                  d''2. d''4 |
+                                  a'4 a'4 b'4 cis''4 |
+                                  d''2. \times 2/3{ d''8 d''8 d''8 } |
+                                  <g''b''>2. \times 2/3 { <g'' b''>8 <g'' b''> <fis'' a''>}  |
+                                  <d'' fis''>2. <d'' fis''>4 |
+                                  <a' a''>4 <a' a''>4 <b' gis''>4 <cis'' g''>4 |
+                                  <d'' fis''>2. \times 2/3 { <d'' fis''>8 <d'' fis''> <d'' fis''> }  |
+                                  <g'' b''>2. \times 2/3 { <g'' b''>8 <g'' b''> <fis'' a''>}  |
+                                  <d'' fis''>2. <d'' a''>4 |
+                                  <a' cis'''>4 <a' a''>4 <b' gis''>4 <cis'' g''>4 |
+                                  <d'' fis''>2. r4 |
+                                  r1
+                          - ly:
+                              >
+                                  \bar "|."
+                      lyrics:
+                          >
+                              For | years I yearned for love love love a
+                              girl was what I need. I
+                              dreamed for her to live with me
+                              I
+                              nee- ded her with speed.
+                              I built my- self this
+                              snow- girl, most
+                              gor- geous girl on
+                              earth. ''t_Was
+                              on a Christ- mas
+                              mor- ning that
+                              I ar- ranged her
+                              birth.
+
+                              Yip- pee ya
+                              yo, yip- pee ya
+                              yay this
+                              is the cow- boy
+                              way Yip- pee ya
+                              yay, yip- pee ya
+                              yo, let's
+                              sing of ho ho ho.
+
+                              I gave her quite the
+                              car- rot
+                              some leeks to lace her
+                              shirt.
+                              to un- der- line her deep dark eyes
+                              I squir- ted in some dirt.
+
+                              Yip- pee ya yo,
+                              yip- pee ya
+                              yay this
+                              is the cow- boy
+                              way Yip- pee ya
+                              yay, yip- pee ya
+                              yo, let's
+                              sing of ho ho ho.
+
+                              But as she stood out- side a- lone,
+                              I felt I missed her so,
+                              I want her under my mis- tle- toe,
+                              and do the ho ho ho.
+
+                              The christ- mas spi- rit came to me,
+                              and I made her come in,
+                              She felt so cold, yet made me hot,
+                              it felt like a sin,
+                              but it was a win- win.
+
+                              Dis- as- ter struck when o- ver- night,
+                              the girl had dis- ap- peared.
+                              she si- lent- ly had left my bed,
+                              and left it wet wet wet.
+
+                              Yet ne- ver eve- ry- thing is lost,
+                              and al- so in this case,
+                              She left her car- rot in my bed,
+                              To- ge- ther with the lace.
+
+                              That mo- ment when I re- a- lized,
+                              the girl was- n't my thing.
+                              I used the car- rot o- ther- wise,
+                              and boy did joy it bring.
+
+                              and boy did joy it bring.
+
+                              So here's a piece of good ad- vice,
+                              when- e- ver you feel low,
+                              go toss your- self a sa- lad bar,
+                              with car- rots, leeks and snow.
+
+                              Yip- pee ya yo,
+                              yip- pee ya
+                              yay this
+                              is the cow- boy
+                              way Yip- pee ya
+                              yay, yip- pee ya
+                              yo, let's
+                              feel like wow wow wow.
+          violin:
+              type : "Staff"
+              instrumentName : "violin"
+              staves:
+                  tenor:
+                      staffProperties:
+                          midiInstrument : "\"violin\""
+                          midiMinimumVolume : "#0.9"
+                          midiMaximumVolume : "#1.0"
+                      music:
+                          - transpose:
+                              to: "c"
+                          - notes:
+                              >
+                                \global
+                                %% Music follows here.
+                                r1 |  r1 |
+                                r1 |  r1 |
+                                e''16  g'' a'' e''~e'' d'' c'' a' c''2|
+                                r1 |
+                                e''16 g'' a'' c'''~c''' a'' g'' e'' g''2 |
+                                r1 |
+                                g''16 a'' g'' e''~e'' d'' e'' a'' g''2 |
+                                r1 |  r1 |
+                                r1 |  r1 |
+                                r1 |  r1 |
+                                r1 |  r1 |
+                                r1 |  r1 |
+                                r1 |  r1 |
+                                r1 |  r1 |
+                                r1 |  r1 |
+                                r1 |  r1 |
+                                r1 |  r1 |
+                                r1 |  r1 |
+                                r1 |  r1 |
+                                r1 |  r1 |
+                                r1 |  r1 |
+                                r1 |  r1 |
+                                r1 |  r1 |
+                                r1 |  r1 |
+                                r1 |  r1 |
+                                r1 |  r1 |
+                                r1 |  r1 |
+                                r1 |  r1 |
+                                r1 |  r1 |
+                                r1 |  r1 |
+                                r1 |  r1 |
+                                r1 |  r1 |
+                                r1 |  r1 |
+                                r1 |  r1 |
+                                r1 |  r1 |
+                                r1 |  r1 |
+                                r1 |  r1 |
+                                r1 |  r1 |
+                                r1 |  r1 |
+                                r1 |  r1 |
+                                r1 |  r1 |
+                                r1 |  r1 |
+                                r1 |  r1 |
+                                r1 |  r1 |
+                                r1 |  r1 |
+                                r1 |  r1 |
+                                r1 |  r1 |
+                                r1 |  r1 |
+                                r1 |  r1 |
+                                r1 |  r1 |
+                                r1 |  r1 |
+                                r1 |  r1 |
+                                r1 |  r1 |
+                                r1 |  r1 |
+                                r1 |
+                                \transpose c d, {g''16  a'' c''' a''~a'' g'' e'' c'' e''16 f'' g'' a'' c'''4} |

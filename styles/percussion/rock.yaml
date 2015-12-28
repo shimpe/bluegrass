@@ -1,4 +1,4 @@
-# bluegrass style
+# rock style
 # (C) 2015 stefaan himpe
 style:
       name : 'rock'
@@ -84,5 +84,37 @@ style:
                                             \new DrumVoice {
                                                 \voiceTwo bd4. bd8 }
                                         >>}
+                                    }
+                           SlowerRock1:
+                                >
+                                    {\drummode {
+                                        <<
+                                            \new DrumVoice {
+                                                \voiceOne hhc4 hhc <<sn hhc>> hhc }
+                                            \new DrumVoice {
+                                                \voiceTwo bd2. bd4 }
+                                        >>}
+                                    }
+                           Fill1:
+                                >
+                                    {\drummode {
+                                      <<
+                                        \new DrumVoice {
+                                            \voiceOne sn16 sn sn bd sn bd sn sn sn bd sn bd sn sn sn sn
+                                        }
+                                      >>}
+                                    }
+                           RockEnd:
+                                >
+                                    {\drummode {
+                                      <<
+                                        \new DrumVoice {
+                                          \voiceOne hho4 r4
+                                        }
+                                        \new DrumVoice {
+                                          \voiceTwo bd4 r4
+                                        }
+                                      >>
+                                    }
                                     }
                            Rest : "{ r2 }"

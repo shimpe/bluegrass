@@ -1,5 +1,6 @@
 song:
-      style : "test_waltz"
+      style : "waltz"
+      rhythm: "waltz"
       header:
           title : "test"
           subtitle : "generated using BlueGrass"
@@ -13,7 +14,15 @@ song:
               to : "c"
           - chords :
               >
-                  VIm_a V_b IV_a IV_b IIm_a IIm_b III_a
-                  IIIm7_b Ib7_b
+                  VIm V IV IV
+                  IIm IIm III III
+                  VIm V IV IV
+                  IIm IIIm VIm_end
 
-
+      percussion:
+          - patterns:
+              >
+                  WaltzFast WaltzFast  WaltzFast WaltzFill
+                  Waltz1 Waltz1 Waltz1 WaltzFill
+                  WaltzFast WaltzFast  WaltzFast WaltzFill
+                  Waltz1 WaltzFill WaltzEnd
