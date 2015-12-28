@@ -327,7 +327,7 @@ class VoiceLeader(object):
 
         return pitch
 
-    def calculate(self, from_fragment, from_scale, to_scale, reorder_notes=DIRECT_TRANSPOSITION, map_accidentals=True):
+    def calculate(self, from_fragment, src2targetdistance, from_scale, to_scale, reorder_notes=DIRECT_TRANSPOSITION, map_accidentals=True):
         """
         :param from_fragment: list of pitches
         :param from_scale: scale in which the above pitches are to be interpreted
@@ -338,13 +338,12 @@ class VoiceLeader(object):
         """
         degrees_accidentals = [from_scale.getScaleDegreeAndAccidentalFromPitch(n) for n in from_fragment]
         pitch_midi = {p.midi: p for p in from_fragment}
-        target_distance = to_scale.getTonic().midi - from_scale.getTonic().midi
 
         # to guarantee a suitable octave, only consider the pitches from the source fragment and target fragment
         # augmented with some margin (a third)
         minpitch = music21.interval.Interval("M-3").transposePitch(pitch_midi[min(pitch_midi.keys())])
         maxpitch = music21.interval.Interval("M3").transposePitch(
-                music21.interval.Interval(target_distance).transposePitch(pitch_midi[max(pitch_midi.keys())]))
+                music21.interval.Interval(src2targetdistance).transposePitch(pitch_midi[max(pitch_midi.keys())]))
 
         target_pitches_without_accidentals = [to_scale.pitchFromDegree(d[0], minPitch=minpitch,
                                                                        maxPitch=maxpitch) for d in degrees_accidentals]

@@ -172,7 +172,7 @@ class StyleCompiler(object):
     def lyricsfragmentname(self, trackname, staffname):
         return self.voicefragmentname(trackname, staffname) + "Lyrics"
 
-    # @profile
+    #@profile
     def compile(self):
         # read song and style specs
         song = self.load_song(self.options.inputfile[0])
@@ -549,9 +549,9 @@ class StyleCompiler(object):
                                     l = Lily2Stream()
                                     s = l.parse(fragment)
                                     vlmethod = self.voiceleading_method(style, name, staff)
-
-                                    self.transform_note_stream(s, source_scale, target_scale, vl, vlmethod)
-                                    self.transform_chord_stream(s, source_scale, target_scale, vl, vlmethod)
+                                    src2targetdistance = target_pitch.midi - sourcepitch.midi
+                                    self.transform_note_stream(s, src2targetdistance, source_scale, target_scale, vl, vlmethod)
+                                    self.transform_chord_stream(s, src2targetdistance, source_scale, target_scale, vl, vlmethod)
 
                                     new_fragment = "{ " + l.unparse(
                                             s.flat.getElementsByClass(["Note", "Chord", "Rest"]).stream()) + " }"
@@ -583,9 +583,9 @@ class StyleCompiler(object):
                                     l = Lily2Stream()
                                     s = l.parse(fragment)
                                     vlmethod = self.voiceleading_method(style, name, staff)
-
-                                    self.transform_note_stream(s, source_scale, target_scale, vl, vlmethod)
-                                    self.transform_chord_stream(s, source_scale, target_scale, vl, vlmethod)
+                                    src2targetdistance = target_pitch.midi - sourcepitch.midi
+                                    self.transform_note_stream(s, src2targetdistance, source_scale, target_scale, vl, vlmethod)
+                                    self.transform_chord_stream(s, src2targetdistance, source_scale, target_scale, vl, vlmethod)
 
                                     new_fragment = "{ " + l.unparse(
                                             s.flat.getElementsByClass(["Note", "Chord", "Rest"]).stream()) + " }"
@@ -710,14 +710,14 @@ class StyleCompiler(object):
         }
         return d[("I", degree)] if ("I", degree) in d else 0
 
-    def transform_chord_stream(self, s, source_scale, target_scale, vl, vlmethod):
+    def transform_chord_stream(self, s, src2targetdistance, source_scale, target_scale, vl, vlmethod):
         chord_stream = s.flat.getElementsByClass(["Chord"]).stream()
         if chord_stream:
             list_of_chordpitches = []
             for cd in chord_stream:
                 pitches = [n.pitch for n in cd]
                 if pitches:
-                    result = vl.calculate(pitches, source_scale, target_scale,
+                    result = vl.calculate(pitches, src2targetdistance, source_scale, target_scale,
                                           reorder_notes=vlmethod, map_accidentals=True)
                     this_chord = []
                     for p, n in enumerate(cd.pitches):
@@ -726,12 +726,12 @@ class StyleCompiler(object):
             for p, cs in enumerate(chord_stream):
                 cs.pitches = list_of_chordpitches[p]
 
-    def transform_note_stream(self, s, source_scale, target_scale, vl, vlmethod):
+    def transform_note_stream(self, s, src2targetdistance, source_scale, target_scale, vl, vlmethod):
         note_stream = s.flat.getElementsByClass(["Note"]).stream()
         if note_stream:
             pitches = [n.pitch for n in note_stream]
             if pitches:
-                result = vl.calculate(pitches, source_scale, target_scale,
+                result = vl.calculate(pitches, src2targetdistance, source_scale, target_scale,
                                       reorder_notes=vlmethod, map_accidentals=True)
                 for p, n in enumerate(note_stream):
                     n.pitch = result[p]
