@@ -172,7 +172,7 @@ class StyleCompiler(object):
     def lyricsfragmentname(self, trackname, staffname):
         return self.voicefragmentname(trackname, staffname) + "Lyrics"
 
-    #@profile
+    @profile
     def compile(self):
         # read song and style specs
         song = self.load_song(self.options.inputfile[0])

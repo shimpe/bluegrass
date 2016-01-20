@@ -34,14 +34,14 @@ style:
                           I :
                               >
                                   {
-                                      { <g' c'' e''>8 <g' c'' e''> }
-                                      { <g' c'' e''>8 <g' c'' e''> }
+                                      \times 2/3 { <g' c'' e''>8 <g' c'' e''>8 <g' c'' e''> }
+                                      \times 2/3 { <g' c'' e''>8 <g' c'' e''>8 <g' c'' e''> }
                                   }
                           I7 :
                               >
                                   {
-                                      { <g' bes' e''>8 <g' c'' e''>8  }
-                                      { <g' bes' e''>8 <g' c'' e''>8  }
+                                      \times 2/3 { <g' bes' e''>8 <g' bes' e''>8 <g' c'' e''>8  }
+                                      \times 2/3 { <g' bes' e''>8 <g' bes' e''>8 <g' c'' e''>8  }
                                   }
                           StepUp :
                               >

@@ -1,0 +1,28 @@
+song:
+      style : "slowrock"
+      rhythm: "rock"
+      header:
+          title : "test"
+          subtitle : "generated using BlueGrass"
+          composer : "shiihs"
+      global:
+          key : "c \\major"
+      midi:
+          tempo: 144
+      harmony:
+          - transpose:
+              to : "c"
+          - chords :
+              >
+                  VIm V IV IV
+                  IIm IIm III III
+                  VIm V IV IV
+                  IIm IIIm VIm_end
+
+      percussion:
+          - patterns:
+              >
+                  SlowRock1 SlowRock1 SlowRock1 SlowRock1
+                  SlowRock1 SlowRock1 SlowRock1 SlowRock1
+                  SlowerRock1 SlowerRock1
+                  SlowRock1 SlowRock1 SlowRock1 SlowRock1
