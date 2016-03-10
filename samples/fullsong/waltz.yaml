@@ -1,0 +1,208 @@
+song:
+      style : "waltz"
+      rhythm: "waltz"
+      header:
+          title : "test"
+          subtitle : "generated using BlueGrass"
+          composer : "shiihs"
+      global:
+          key : "c \\major"
+      midi:
+          tempo: 115
+      harmony:
+          - transpose:
+              to : "c"
+          - chords :
+              >
+                  VIm_a V_a IV_a IV_b
+                  IIm_a IIm_a III_a III7_b
+                  VIm_a V_a IV_a IV_b
+                  IIm_a III_a VIm_a VIm_b
+
+                  I_a IIIm_b VIm_a VIm_b
+                  IIm_a I_b V_a I_a
+
+                  IIIm_b VIm_a VIm_b
+                  IIm_a V_b I_a I_b
+
+                  VIm_a V_a IV_a IV_b
+                  IIm_a IIm_a III_a III_b
+                  VIm_a V_a IV_a IV_b
+                  IIm_a III_a VIm_a VIm_b
+
+                  I_a III_a IV_a V7_a
+                  I_a III_a IV_a V7_a
+
+                  IIm_a IIIm_a VIm_a VIm_b
+                  IIm_a IIIm_a VIm_a VIm_b
+
+                  VIm_a V_a IV_a IV_b
+                  IIm_a III_a VIm_a VIm_b
+
+                  I_a IIIm_b VIm_a VIm_b
+                  IIm_a I_b V_a I_a
+
+                  IIIm_b VIm_a VIm_b
+                  IIm_a V_a I_a I_end
+
+
+      percussion:
+          - patterns:
+              >
+                  Rest Rest Rest Rest
+                  Rest Rest Rest Rest
+
+                  WaltzFast WaltzFast WaltzFast  WaltzFill
+                  Waltz1 Waltz1 Waltz1 WaltzFill
+
+                  WaltzFast WaltzFast WaltzFast WaltzFill
+                  Waltz1 WaltzFast WaltzFill
+
+                  Waltz1 Waltz1 Waltz1 Waltz1
+                  Waltz1 Waltz1 Waltz1 WaltzFill
+
+                  Waltz1 Waltz1 Waltz1 Waltz1
+                  Waltz1 Waltz1 Waltz1 Waltz1 WaltzFill
+
+                  WaltzFast WaltzFast  WaltzFast WaltzFill
+                  Waltz1 Waltz1 Waltz1 WaltzFill
+                  WaltzFast WaltzFast  WaltzFast WaltzFill
+                  Waltz1 WaltzFill WaltzFast WaltzFast
+
+                  Waltz1 WaltzFill
+                  WaltzFast WaltzFast WaltzFast WaltzFast
+                  WaltzEnd
+
+                  Rest Rest Rest Rest
+                  Rest Rest Rest Rest
+
+                  Waltz1 Waltz1 Waltz1 Waltz1
+                  Waltz1 Waltz1 Waltz1 WaltzFast
+
+                  WaltzFast WaltzFast  WaltzFast Waltz1
+                  WaltzFill Waltz1 WaltzEnd
+          - ly:
+              >
+                  \bar"|."
+
+      tracks:
+          tenor:
+              type : "Staff"
+              instrumentName : "accordion"
+              staves:
+                  tenor:
+                      staffProperties:
+                          midiInstrument : "\"accordion\""
+                          midiMinimumVolume : "#0.7"
+                          midiMaximumVolume : "#0.9"
+                      music:
+                          - transpose:
+                              to: "c"
+                          - notes:
+                              >
+                                  \global
+                                  \dynamicUp r2. |
+                                  r2. |
+                                  r2. |
+                                  r2. |
+                                  r2. |
+                                  r2. |
+                                  r2. |
+                                  r2. |
+
+                                  r4 <e' c'>2 |
+                                  <d' b'>2 <e' a'>4~ |
+                                  <e' a'>4 r4 <f' a'>4~ |
+                                  <f' a'>2 r4 |
+
+
+                                  r4 <d' c''>2 |
+                                  <e' b'>2 <e' a'>4~ |
+                                  <e' a'>4 r4 <c' a'>4~ |
+                                  <c' a'>2 r4 |
+
+                                  r4 r4 c''16 d'' e'' f'' |
+                                  g'' a'' g''8 ~ g''4 ~ g''8 r8 |
+                                  a''16 g'' e'' d'' c'' b' a' g' a' b' c'' d'' |
+                                  e''16 f'' e''32 f'' e'' f'' e'' f'' e'' f'' e'' f'' e'' f'' e'' f'' e'' r32 r8 |
+                                  r2 f''8 e'' |
+                                  d'' c'' b' c'' d'' b'~ |
+                                  b'2. |
+
+
+                                  r4 r4 c''16 d'' e'' f'' |
+                                  g'' a'' g''8 ~ g''4 ~ g''8 r8 |
+                                  a''16 g'' e'' d'' c'' b' a' g' a' b' c'' d'' |
+                                  e''16 f'' e''32 f'' e'' f'' e'' f'' e'' f'' e'' f'' e'' f'' e'' f'' e'' r32 r8 |
+                                  r2 f''8 e'' |
+                                  d'' c'' d'' e''4 d''8~ |
+                                  d''4 c''2~ |
+                                  c''2 r4 |
+
+                                  r4 <e' c'>4 r4 |
+                                  <d' b'>4 r4 <e' a'>4~ |
+                                  <e' a'>2 <f' a'>4~ |
+                                  <f' a'>2 r4 |
+
+                                  r4 <d' c''>4 r4 |
+                                  <d' b'>4 r4 <f' a'>4~ |
+                                  <f' a'>2 <e' gis'>4~ |
+                                  <e' gis'>2 r4 |
+
+                                  r4 <e' c'>4 r4 |
+                                  <d' b'>4 r4 <e' a'>4~ |
+                                  <e' a'>2 <f' a'>4~ |
+                                  <f' a'>2 r4 |
+
+                                  r4 <d' c''>4 r4 |
+                                  <e' b'>4 r4 <e' a'>4~ |
+                                  <e' a'>2 <c' a'>4~ |
+                                  <c' a'>2 r4 |
+
+                                  \times 2/3 { g''16 e'' c'' g''16 e'' c'' g''16 e'' c'' g''16 e'' c'' g''16 e'' c'' g''16 e'' c''}|
+                                  \times 2/3 { gis''16 e'' b' gis''16 e'' b' gis''16 e'' b' gis''16 e'' b' gis''16 e'' b' gis''16 e'' b'   }|
+                                  \times 2/3 { a''16 f'' c'' a''16 f'' c'' a''16 f'' c'' a''16 f'' c'' a''16 f'' c'' a''16 f'' c''}|
+                                  \times 2/3 { g''16 f'' d'' g''16 f'' d'' g''16 f'' d'' g''16 f'' d'' g''16 f'' d'' g''16 f'' d''  }|
+
+                                  \times 2/3 { g''16 e'' c'' g''16 e'' c'' g''16 e'' c'' g''16 e'' c'' g''16 e'' c'' g''16 e'' c''}|
+                                  \times 2/3 { gis''16 e'' b' gis''16 e'' b' gis''16 e'' b' gis''16 e'' b' gis''16 e'' b' gis''16 e'' b'   }|
+                                  \times 2/3 { a''16 f'' c'' a''16 f'' c'' a''16 f'' c'' a''16 f'' c'' a''16 f'' c'' a''16 f'' c''}|
+                                  \times 2/3 { g''16 f'' d'' g''16 f'' d'' g''16 f'' d'' g''16 f'' d'' g''16 f'' d'' g''16 f'' d''  }|
+
+                                  \times 2/3 { a''16 f'' d'' a''16 f'' d'' a''16 f'' d'' a''16 f'' d'' a''16 f'' d'' a''16 f'' d'' }|
+                                  \times 2/3 { g''16 e'' b'  g''16 e'' b'  g''16 e'' b'  g''16 e'' b'  g''16 e'' b'  g''16 e'' b' }|
+                                  \times 2/3 { g''16 e'' a'  g''16 e'' a'  g''16 e'' a'  g''16 e'' a'  g''16 e'' a'  g''16 e'' a' }|
+                                  \times 2/3 { a''16 e'' c'' a''16 e'' c'' a''16 e'' c'' a''16 e'' c'' a''16 e'' c'' a''16 e'' c'' }|
+
+                                  \times 2/3 { a''16 f'' d'' a''16 f'' d'' a''16 f'' d'' a''16 f'' d'' a''16 f'' d'' a''16 f'' d'' } |
+                                  \times 2/3 { g''16 e'' b'  g''16 e'' b'  g''16 e'' b'  g''16 e'' b'  g''16 e'' b'  g''16 e'' b' } |
+                                  \times 2/3 { g''16 e'' a'  g''16 e'' a'  g''16 e'' a'  g''16 e'' a'  g''16 e'' a'  g''16 e'' a' } |
+                                  a''16 r16 r8 r2 |
+
+                                  r4 <e' c'>2 |
+                                  <d' b'>2 <e' a'>4~ |
+                                  <e' a'>4 r4 <f' a'>4~ |
+                                  <f' a'>2 r4 |
+
+                                  r4 <d' c''>2 |
+                                  <e' b'>2 <e' a'>4~ |
+                                  <e' a'>4 r4 <c' a'>4~ |
+                                  <c' a'>2 r4 |
+
+                                  r4 r4 c''16 d'' e'' f'' |
+                                  g'' a'' g''8 ~ g''4 ~ g''8 r8 |
+                                  a''16 g'' e'' d'' c'' b' a' g' a' b' c'' d'' |
+                                  e''16 f'' e''32 f'' e'' f'' e'' f'' e'' f'' e'' f'' e'' f'' e'' f'' e'' r32 r8 |
+                                  r2 f''8 e'' |
+                                  d'' c'' b' c'' d'' b'~ |
+                                  b'2. |
+
+                                  r4 r4 c''16 d'' e'' f'' |
+                                  g'' a'' g''8 ~ g''4 ~ g''8 r8 |
+                                  a''16 g'' e'' d'' c'' b' a' g' a' b' c'' d'' |
+                                  e''16 f'' e''32 f'' e'' f'' e'' f'' e'' f'' e'' f'' e'' f'' e'' f'' e'' r32 r8 |
+                                  r2 f''8 e'' |
+                                  d'' c'' d'' e''4 d''8~ |
+                                  d''4 c''2 ~ |
+                                  \times 2/3 {c''16 b' c'' e'' c'' e'' g'' e'' g''} c'''4 r8 |
+                                  \bar"|."

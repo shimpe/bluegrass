@@ -14,10 +14,21 @@ song:
               to : "c"
           - chords :
               >
-                  VIm V IV IV
-                  IIm IIm III III
-                  VIm V IV IV
-                  IIm IIIm VIm_end
+                  VIm_a V_b IV_a IV_b
+                  IIm_a IIm_b III_a III_b
+                  VIm_a V_b IV_a IV_b
+                  IIm_a IIIm_b VIm_a VIm_b
+
+                  I_a IIIm_b VIm_a VIm_b
+                  IIm_a I_b V_a I_a
+
+                  I_a IIIm_b VIm_a VIm_b
+                  IIm_a V_b I_a I_b
+
+                  VIm_a V_b IV_a IV_b
+                  IIm_a IIm_b III_a III_b
+                  VIm_a V_b IV_a IV_b
+                  IIm_a IIIm_b VIm_a VIm_b
 
       percussion:
           - patterns:
@@ -25,4 +36,15 @@ song:
                   WaltzFast WaltzFast  WaltzFast WaltzFill
                   Waltz1 Waltz1 Waltz1 WaltzFill
                   WaltzFast WaltzFast  WaltzFast WaltzFill
-                  Waltz1 WaltzFill WaltzEnd
+                  Waltz1 WaltzFill WaltzFast
+
+                  Waltz1 Waltz1 Waltz1 Waltz1
+                  Waltz1 Waltz1 Waltz1 WaltzFill
+
+                  Waltz1 Waltz1 Waltz1 Waltz1
+                  Waltz1 Waltz1 Waltz1 WaltzFill WaltzFill
+
+                  WaltzFast WaltzFast  WaltzFast WaltzFill
+                  Waltz1 Waltz1 Waltz1 WaltzFill
+                  WaltzFast WaltzFast  WaltzFast WaltzFill
+                  Waltz1 WaltzFill WaltzFast

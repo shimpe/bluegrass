@@ -4,22 +4,26 @@ style:
       name : 'waltz'
       global:
           time : "3/4"
+      midi:
+          tempo: 120
       specified-relative-to :
           key : "c"
           mode : "major"
       tracks :
           guitar :
               type : "Staff"
-              instrumentName : "\"guitar\""
+              instrumentName : "accordion"
               staves :
                   guitar:
                       staffProperties:
-                          midiInstrument : "\"acoustic guitar (nylon)\""
+                          midiInstrument : "\"accordion\""
                       voiceLeadingMethod : 0
                       chords :
-                          I : "{c'8 < g' c'' e'' > < g' c'' e''> g8 <g' c'' e''>8 < g' c'' e''>}"
-                          Iend : "{c'2.}"
-                          I7: "{c'8 < g' bes' e''> < g' bes' e''> g8 <g' bes' e''> <g' bes' e''>}"
+                          Ia : "{c'8 < g' c'' e'' > < g' c'' e''> g8 <g' c'' e''>8 < g' c'' e''>}"
+                          Ia7: "{c'8 < g' bes' e''> < g' bes' e''> g8 <g' bes' e''> <g' bes' e''>}"
+                          Ib : "{c'8 < g' c'' e'' > < g' c'' e''> g8 <g' c'' e''>16 ~ < g' c'' f''> < g' c'' e''>8}"
+                          Ib7: "{c'8 < g' bes' e''> < g' bes' e''> g8 <g' bes' e''>16 ~ <g' bes' f''>  <g' bes' e''>8}"
+                          Iend : "{c'8 < g' c'' e''> < g' b' f''> <g' c'' e''>4 r8}"
                           Rest: "{r2.}"
           bass :
               type : "Staff"
@@ -31,8 +35,9 @@ style:
                       voiceLeadingMethod : 0
                       clef : "bass_8"
                       chords :
-                          I : "{ c,4. g,,4. }"
-                          Iend : "{c,2.}"
-                          I7: "{ c,4. g,,4. }"
+                          Ia : "{ c,4. g,,4. }"
+                          Ia7: "{ c,4. g,,4. }"
+                          Ib : "{ c,4. g,,4. }"
+                          Ib7: "{ c,4. g,,4. }"
+                          Iend : "{c,4. r4. }"
                           Rest: "{r2.}"
-                                    
