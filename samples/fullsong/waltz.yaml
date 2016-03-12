@@ -86,6 +86,64 @@ song:
                   \bar"|."
 
       tracks:
+          violin:
+              type : "Staff"
+              instrumentName : "violin"
+              staves:
+                  tenor:
+                      staffProperties:
+                          midiInstrument : "\"violin\""
+                          midiMinimumVolume : "#0.9"
+                          midiMaximumVolume : "#1.0"
+                      music:
+                          - transpose:
+                              to: "c"
+                          - notes:
+                              >
+                                \global
+                                %% Music follows here.
+                                r2. | r2. |r2. |r2. |
+                                r2. |r2.  |r2. |r2. |
+                                r2. | r2. |r2. |r2. |
+                                r2. |r2.  |r2. |r2. |
+                                r2. | r2. |r2. |r2. |
+                                r2. |r2.  |r2. |r2. |
+                                r2. | r2. |r2. |r2. |
+                                r2. |r2.  |r2. |r2. |
+
+                                r4 r4 c''16 d'' e'' f'' |
+                                g'' a'' g''8 ~ g''4 ~ g''8 r8 |
+                                a''16 g'' e'' d'' c'' b' a' g' a' b' c'' d'' |
+                                e''16 f'' e''32 f'' e'' f'' e'' f'' e'' f'' e'' f'' e'' f'' e'' f'' e'' r32 r8 |
+                                r2 f''8 e'' |
+                                d'' c'' b' c'' d'' b'~ |
+                                b'2. |
+
+                                r2.
+
+                                r4 r4 c''16 d'' e'' f'' |
+                                g'' a'' g''8 ~ g''4 ~ g''8 r8 |
+                                a''16 g'' e'' d'' c'' b' a' g' a' b' c'' d'' |
+                                e''16 f'' e''32 f'' e'' f'' e'' f'' e'' f'' e'' f'' e'' f'' e'' f'' e'' r32 r8 |
+                                r2 f''8 e'' |
+                                d'' c'' d'' e''4 d''8~ |
+                                d''4 c''2~ |
+                                c''2 r4 |
+
+                                r2. | r2. | r2. | r2. |
+                                r2. | r2. | r2. | r2. |
+                                r2. | r2 r8 d''8 |
+                                e'' f'' e'' d'' c'' d'' |
+                                e''2.~ |
+                                e''2 r4 |
+                                r2 r8 d''8 |
+                                e'' f'' e'' d'' c'' b' |
+                                a'16 r16 r8 r2 |
+
+                                r2. | r2. | r2. | r2. |
+                                r2. | r2. | r2. | r2. |
+
+
           tenor:
               type : "Staff"
               instrumentName : "accordion"
