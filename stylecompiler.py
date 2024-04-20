@@ -4,7 +4,7 @@ from collections import defaultdict
 
 import music21
 from mako.template import Template
-from ruamel.yaml import load, RoundTripLoader
+from ruamel.yaml import YAML, RoundTripLoader
 
 from harvestedproperties import HarvestedProperties
 from lily2stream import Lily2Stream
@@ -130,7 +130,8 @@ class StyleCompiler(object):
         try:
             with open(fname, "r") as f:
                 style = f.read()
-            parsed_style = load(style, RoundTripLoader)
+            parsed_style = YAML()
+            parsed_style= parsed_style.load(style)
             style = parsed_style["style"]
             print("*** Loaded style file ", fname)
         except:
@@ -145,11 +146,12 @@ class StyleCompiler(object):
         try:
             with open(fname, "r") as f:
                 song = f.read()
-            parsed_song = load(song, RoundTripLoader)
+            parsed_song = YAML()
+            parsed_song = parsed_song.load(song)
             song = parsed_song["song"]
             print("*** Loaded song file ", fname)
-        except Exception:
-            print("*** Error: couldn't load song file {0}. {1}".format(fname, sys.exc_info()[0]))
+        except Exception as e:
+            print("*** Error: couldn't load song file {0}. {1}.\nReason: {2}".format(fname, sys.exc_info()[0], e))
             sys.exit(4)
         return song
 
